@@ -14,6 +14,25 @@ type PageRow = {
   updated_at: string;
 };
 
+/** Postgres unique_violation. Supabase/PostgREST가 error.code로 그대로 전달한다. */
+const UNIQUE_VIOLATION = "23505";
+
+export class SlugConflictError extends Error {
+  constructor(slug: string) {
+    super(`slug "${slug}" already exists`);
+    this.name = "SlugConflictError";
+  }
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === UNIQUE_VIOLATION
+  );
+}
+
 function rowToRecord(row: PageRow): PageRecord {
   return {
     id: row.id,
@@ -72,7 +91,10 @@ export async function createPage(input: PageInput): Promise<PageRecord> {
     })
     .select("*")
     .single();
-  if (error) throw error;
+  if (error) {
+    if (isUniqueViolation(error)) throw new SlugConflictError(input.slug);
+    throw error;
+  }
   return rowToRecord(data as PageRow);
 }
 
@@ -93,7 +115,10 @@ export async function updatePage(id: string, input: PageInput): Promise<PageReco
     .eq("id", id)
     .select("*")
     .single();
-  if (error) throw error;
+  if (error) {
+    if (isUniqueViolation(error)) throw new SlugConflictError(input.slug);
+    throw error;
+  }
   return rowToRecord(data as PageRow);
 }
 

@@ -15,27 +15,44 @@ const NEXT_ACTION: Record<PageStatus, { label: string; status: PageStatus }> = {
 export default function StatusActionButton({ id, status }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const next = NEXT_ACTION[status];
 
   async function handleClick() {
     setLoading(true);
-    await fetch(`/api/pages/${id}/status`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: next.status }),
-    });
-    setLoading(false);
-    router.refresh();
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/pages/${id}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next.status }),
+      });
+
+      if (!response.ok) {
+        setError("상태 변경에 실패했어요. 다시 로그인해야 할 수 있어요.");
+        return;
+      }
+
+      router.refresh();
+    } catch {
+      setError("상태 변경에 실패했어요. 다시 로그인해야 할 수 있어요.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={loading}
-      className="text-xs text-blue-600 hover:underline disabled:opacity-50"
-    >
-      {loading ? "처리 중..." : next.label}
-    </button>
+    <div className="flex flex-col items-end">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={loading}
+        className="text-xs text-blue-600 hover:underline disabled:opacity-50"
+      >
+        {loading ? "처리 중..." : next.label}
+      </button>
+      {error && <p className="mt-1 text-right text-xs text-red-600">{error}</p>}
+    </div>
   );
 }

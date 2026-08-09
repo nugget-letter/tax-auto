@@ -14,7 +14,26 @@ type Props = {
 
 export default function RichTextEditor({ value, onChange }: Props) {
   const editor = useEditor({
-    extensions: [StarterKit, TextStyleKit, Highlight],
+    // 저장 시 sanitizer(lib/sanitize.ts)가 허용하는 태그는 p/br/strong/em/span/mark 뿐이라
+    // 그 외 노드는 마크다운/단축키로 입력해도 저장 때 래퍼가 벗겨져 내용이 조용히 뭉개진다.
+    // 그래서 툴바가 실제로 노출하는 기능(굵게/기울임/글자 크기/강조)만 남기고 비활성화한다.
+    extensions: [
+      StarterKit.configure({
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
+        heading: false,
+        blockquote: false,
+        codeBlock: false,
+        code: false,
+        strike: false,
+        horizontalRule: false,
+        link: false,
+        underline: false,
+      }),
+      TextStyleKit,
+      Highlight,
+    ],
     content: value,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {

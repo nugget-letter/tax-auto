@@ -59,7 +59,13 @@ export default function PageEditorForm({ mode, initialSlug, initialPage }: Props
       });
 
       if (!response.ok) {
-        setError("저장에 실패했어요. 값을 확인하고 다시 시도해주세요.");
+        if (response.status === 401) {
+          setError("세션이 만료되었어요. 다시 로그인해주세요.");
+        } else if (response.status === 409) {
+          setError("이미 사용 중인 슬러그예요. 다른 값을 입력해주세요.");
+        } else {
+          setError("저장에 실패했어요. 값을 확인하고 다시 시도해주세요.");
+        }
         return;
       }
 

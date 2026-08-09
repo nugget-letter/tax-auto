@@ -13,6 +13,10 @@ create table if not exists pages (
   updated_at timestamptz not null default now()
 );
 
+-- 앱은 서비스 롤 키로만 접근하므로 RLS는 정책 없이 켜두면 된다.
+-- (서비스 롤은 RLS를 우회하고, anon 키로는 아무것도 읽거나 쓸 수 없게 된다.)
+alter table pages enable row level security;
+
 create index if not exists pages_updated_at_idx on pages (updated_at desc);
 
 insert into storage.buckets (id, name, public)

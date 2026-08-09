@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { pageInputSchema } from "@/lib/pages/types";
-import { updatePage } from "@/lib/pages/repository";
+import { updatePage, SlugConflictError } from "@/lib/pages/repository";
 import { requireAdminSession } from "@/lib/auth/session";
 import { sanitizePageInputHtml } from "@/lib/sanitize";
 
@@ -29,6 +29,13 @@ export async function PATCH(
     const page = await updatePage(id, sanitizePageInputHtml(parsed.data));
     return NextResponse.json(page);
   } catch (error) {
+    if (error instanceof SlugConflictError) {
+      console.error("[pages] 슬러그 중복", error);
+      return NextResponse.json(
+        { error: "slug_conflict", message: "이미 사용 중인 슬러그예요. 다른 값을 입력해주세요." },
+        { status: 409 }
+      );
+    }
     console.error("[pages] 수정 실패", error);
     return NextResponse.json({ error: "save_failed" }, { status: 500 });
   }

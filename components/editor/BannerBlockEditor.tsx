@@ -21,17 +21,32 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
 
     const formData = new FormData();
     formData.append("file", file);
-    const response = await fetch("/api/upload", { method: "POST", body: formData });
-    const result = await response.json();
 
-    setUploading(false);
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body: formData });
 
-    if (!response.ok) {
-      setError("업로드에 실패했어요.");
-      return;
+      if (!response.ok) {
+        setError(
+          response.status === 401
+            ? "세션이 만료되었어요. 다시 로그인해주세요."
+            : "업로드에 실패했어요. 잠시 후 다시 시도해주세요."
+        );
+        return;
+      }
+
+      const result = (await response.json()) as { url?: string };
+
+      if (!result.url) {
+        setError("업로드에 실패했어요. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      onChange({ ...block, imageUrl: result.url });
+    } catch {
+      setError("업로드에 실패했어요. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setUploading(false);
     }
-
-    onChange({ ...block, imageUrl: result.url });
   }
 
   return (
