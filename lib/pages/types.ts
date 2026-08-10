@@ -13,28 +13,10 @@ export const textBlockSchema = z.object({
   bodyHtml: z.string(),
 });
 
-export const statsBlockSchema = z.object({
-  type: z.literal("stats"),
-  items: z
-    .array(
-      z.object({
-        number: z.string().min(1),
-        label: z.string().min(1),
-      })
-    )
-    .min(2)
-    .max(4),
-});
-
-export const blockSchema = z.discriminatedUnion("type", [
-  bannerBlockSchema,
-  textBlockSchema,
-  statsBlockSchema,
-]);
+export const blockSchema = z.discriminatedUnion("type", [bannerBlockSchema, textBlockSchema]);
 
 export type BannerBlock = z.infer<typeof bannerBlockSchema>;
 export type TextBlock = z.infer<typeof textBlockSchema>;
-export type StatsBlock = z.infer<typeof statsBlockSchema>;
 export type Block = z.infer<typeof blockSchema>;
 
 export const pageStatusSchema = z.enum(["draft", "published", "archived"]);

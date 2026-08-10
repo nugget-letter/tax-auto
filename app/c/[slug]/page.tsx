@@ -5,7 +5,6 @@ import { getPageBySlug } from "@/lib/pages/repository";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth/session";
 import BannerBlock from "@/components/public/BannerBlock";
 import TextBlock from "@/components/public/TextBlock";
-import StatsBlock from "@/components/public/StatsBlock";
 import CtaButton from "@/components/public/CtaButton";
 import PreviewBanner from "@/components/public/PreviewBanner";
 
@@ -55,9 +54,8 @@ export default async function PublicPage({
         {page.blocks.map((block, index) => {
           if (block.type === "banner") return <BannerBlock key={index} block={block} />;
           if (block.type === "text") return <TextBlock key={index} block={block} />;
-          if (block.type === "stats") return <StatsBlock key={index} block={block} />;
-          // 알 수 없는 블록 타입(수동 편집/스키마 변경)은 공개 페이지를 500으로
-          // 떨어뜨리지 않도록 조용히 건너뛴다.
+          // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
+          // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
           return null;
         })}
       </div>
