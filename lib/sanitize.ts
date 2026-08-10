@@ -1,11 +1,37 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import type { PageInput } from "./pages/types";
 
+// isomorphic-dompurify(jsdom 기반)는 Vercel 서버리스 번들에서
+// "require() of ES Module ... not supported" 크래시가 나서(로컬 next dev/build에서는
+// 우연히 재현되지 않았다) htmlparser2 기반의 sanitize-html로 교체했다 — jsdom 의존성이 없다.
 const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark"];
-const ALLOWED_ATTR = ["style"];
+
+const COLOR_PATTERNS = [
+  /^#[0-9a-fA-F]{3,8}$/,
+  /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/,
+  /^rgba\([\d.,\s%]+\)$/,
+];
 
 export function sanitizeBodyHtml(html: string): string {
-  return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
+  return sanitizeHtml(html, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: {
+      "*": ["style"],
+    },
+    // 리치 에디터(components/editor/RichTextEditor.tsx)가 실제로 생성하는 인라인
+    // 스타일만 허용한다 — 굵게/기울임/밑줄/취소선/강조는 태그 자체로 표현되고,
+    // 글꼴/글자크기/자간/행간/색상만 style 속성을 쓴다.
+    allowedStyles: {
+      "*": {
+        color: COLOR_PATTERNS,
+        "background-color": COLOR_PATTERNS,
+        "font-family": [/^var\(--font-[a-z0-9-]+\)$/],
+        "font-size": [/^\d+(\.\d+)?px$/],
+        "letter-spacing": [/^-?\d+(\.\d+)?em$/],
+        "line-height": [/^\d+(\.\d+)?$/],
+      },
+    },
+  });
 }
 
 export function sanitizePageInputHtml(input: PageInput): PageInput {
