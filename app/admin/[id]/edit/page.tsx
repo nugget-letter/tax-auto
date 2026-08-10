@@ -13,5 +13,5 @@ export default async function EditPagePage({
   const page = await getPageById(id);
   if (!page) notFound();
 
-  return <PageEditorForm mode="edit" initialSlug={page.slug} initialPage={page} />;
+  return <PageEditorForm initialSlug={page.slug} initialPage={page} />;
 }

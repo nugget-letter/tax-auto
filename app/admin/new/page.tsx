@@ -6,5 +6,5 @@ import PageEditorForm from "@/components/editor/PageEditorForm";
 export const dynamic = "force-dynamic";
 
 export default function NewPagePage() {
-  return <PageEditorForm mode="create" initialSlug={generateSlug()} />;
+  return <PageEditorForm initialSlug={generateSlug()} />;
 }

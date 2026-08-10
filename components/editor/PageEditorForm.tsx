@@ -18,12 +18,13 @@ function stripKeys(blocks: EditableBlock[]): Block[] {
 }
 
 type Props = {
-  mode: "create" | "edit";
   initialSlug: string;
   initialPage?: PageRecord;
 };
 
-export default function PageEditorForm({ mode, initialSlug, initialPage }: Props) {
+type SavingState = "draft" | "published" | "preview" | null;
+
+export default function PageEditorForm({ initialSlug, initialPage }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(initialPage?.title ?? "");
   const [slug, setSlug] = useState(initialPage?.slug ?? initialSlug);
@@ -31,11 +32,18 @@ export default function PageEditorForm({ mode, initialSlug, initialPage }: Props
   const [ctaHref, setCtaHref] = useState(initialPage?.ctaHref ?? "");
   const [ctaColor, setCtaColor] = useState(initialPage?.ctaColor ?? "#FEE500");
   const [blocks, setBlocks] = useState<EditableBlock[]>(withKeys(initialPage?.blocks ?? []));
-  const [saving, setSaving] = useState<PageStatus | null>(null);
+  const [saving, setSaving] = useState<SavingState>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function save(status: PageStatus) {
-    setSaving(status);
+  // pageId/currentStatus track what's actually persisted so far. They start
+  // from initialPage (edit mode) and get filled in after the first
+  // successful save on a brand-new page — after that, every further save
+  // (including preview) updates the same row via PATCH instead of creating
+  // a duplicate.
+  const [pageId, setPageId] = useState(initialPage?.id);
+  const [currentStatus, setCurrentStatus] = useState<PageStatus>(initialPage?.status ?? "draft");
+
+  async function persist(status: PageStatus): Promise<PageRecord | null> {
     setError(null);
 
     const payload = {
@@ -48,8 +56,8 @@ export default function PageEditorForm({ mode, initialSlug, initialPage }: Props
       ctaColor,
     };
 
-    const url = mode === "create" ? "/api/pages" : `/api/pages/${initialPage!.id}`;
-    const method = mode === "create" ? "POST" : "PATCH";
+    const url = pageId ? `/api/pages/${pageId}` : "/api/pages";
+    const method = pageId ? "PATCH" : "POST";
 
     try {
       const response = await fetch(url, {
@@ -66,15 +74,41 @@ export default function PageEditorForm({ mode, initialSlug, initialPage }: Props
         } else {
           setError("저장에 실패했어요. 값을 확인하고 다시 시도해주세요.");
         }
-        return;
+        return null;
       }
 
-      router.push("/admin");
-      router.refresh();
+      const record: PageRecord = await response.json();
+      setPageId(record.id);
+      setCurrentStatus(record.status);
+      return record;
     } catch {
       setError("저장에 실패했어요. 값을 확인하고 다시 시도해주세요.");
-    } finally {
-      setSaving(null);
+      return null;
+    }
+  }
+
+  async function save(status: "draft" | "published") {
+    setSaving(status);
+    const record = await persist(status);
+    setSaving(null);
+
+    if (record) {
+      router.push("/admin");
+      router.refresh();
+    }
+  }
+
+  async function preview() {
+    setSaving("preview");
+    // Preview saves under whatever status the page already has (draft on a
+    // brand-new page, otherwise draft/published/archived as before) — it
+    // must never force a live published page back to draft just because an
+    // admin wants to check it.
+    const record = await persist(currentStatus);
+    setSaving(null);
+
+    if (record) {
+      window.open(`/c/${record.slug}`, "_blank");
     }
   }
 
@@ -137,6 +171,14 @@ export default function PageEditorForm({ mode, initialSlug, initialPage }: Props
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={preview}
+          disabled={saving !== null}
+          className="rounded border border-gray-300 px-4 py-2 text-sm disabled:opacity-50"
+        >
+          {saving === "preview" ? "저장 중..." : "미리보기"}
+        </button>
         <button
           type="button"
           onClick={() => save("draft")}
