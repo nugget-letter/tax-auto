@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { listPages } from "@/lib/pages/repository";
+import { formatDate } from "@/lib/format";
 import CopyLinkButton from "@/components/dashboard/CopyLinkButton";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,14 @@ async function getOrigin(): Promise<string> {
 
 export default async function PublishedUrlsPage() {
   const [pages, origin] = await Promise.all([listPages(), getOrigin()]);
-  const publishedPages = pages.filter((page) => page.status === "published");
+  const publishedPages = pages
+    .filter((page) => page.status === "published")
+    // 최근 발행일 순. published_at이 없는(마이그레이션 전) 행은 맨 뒤로.
+    .sort((a, b) => {
+      if (!a.publishedAt) return 1;
+      if (!b.publishedAt) return -1;
+      return b.publishedAt.localeCompare(a.publishedAt);
+    });
 
   return (
     <div className="mx-auto max-w-3xl p-6">
@@ -30,6 +38,9 @@ export default async function PublishedUrlsPage() {
             <li key={page.id} className="flex items-center justify-between gap-4 p-4">
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-gray-900">{page.title}</p>
+                <p className="mt-0.5 text-xs text-gray-400">
+                  발행일 {page.publishedAt ? formatDate(page.publishedAt) : "-"}
+                </p>
                 <input
                   type="text"
                   readOnly

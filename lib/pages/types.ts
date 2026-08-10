@@ -64,4 +64,8 @@ export type PageRecord = PageInput & {
   id: string;
   createdAt: string;
   updatedAt: string;
+  // 처음 발행(published)으로 바뀐 시각. 서버가 자동으로 채우며, 한 번 채워지면
+  // 이후 다시 임시저장/보관으로 바뀌어도 지우지 않는다 — "이 페이지가 언제
+  // 처음 발행됐는가"를 남겨두기 위해서다.
+  publishedAt: string | null;
 };
