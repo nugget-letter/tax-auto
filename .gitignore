@@ -12,6 +12,9 @@
 .env
 .env*.local
 
+# harness / editor state (includes nested worktree checkouts under .claude/worktrees/)
+/.claude/
+
 # misc
 .DS_Store
 *.pem
