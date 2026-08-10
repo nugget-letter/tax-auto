@@ -7,14 +7,23 @@ const LABELS: Record<PageStatus, string> = {
 };
 
 const STYLES: Record<PageStatus, string> = {
-  draft: "bg-gray-100 text-gray-600",
-  published: "bg-green-100 text-green-700",
-  archived: "bg-gray-100 text-gray-400",
+  draft: "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200",
+  published: "bg-green-50 text-green-700 ring-1 ring-inset ring-green-200",
+  archived: "bg-slate-100 text-slate-500 ring-1 ring-inset ring-slate-200",
+};
+
+const DOT_STYLES: Record<PageStatus, string> = {
+  draft: "bg-amber-500",
+  published: "bg-green-500",
+  archived: "bg-slate-400",
 };
 
 export default function StatusBadge({ status }: { status: PageStatus }) {
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STYLES[status]}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${STYLES[status]}`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${DOT_STYLES[status]}`} />
       {LABELS[status]}
     </span>
   );
