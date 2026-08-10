@@ -3,6 +3,12 @@
 @theme {
   --font-sans: var(--font-noto-sans-kr), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-noto-serif-kr), ui-serif, serif;
+  /* 너겟 브랜드 색상(nugget-tax와 동일 값) — 관리자 도구(/admin) 전용.
+     공개 랜딩페이지(/c/[slug])는 별도의 미니멀 디자인을 그대로 유지한다. */
+  --color-brand-orange: #ffb020;
+  --color-brand-red: #ff5a36;
+  --color-navy-950: #0b0b10;
+  --color-navy-900: #15151c;
 }
 
 body {
