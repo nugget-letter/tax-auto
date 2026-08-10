@@ -1,7 +1,7 @@
 import DOMPurify from "isomorphic-dompurify";
 import type { PageInput } from "./pages/types";
 
-const ALLOWED_TAGS = ["p", "br", "strong", "em", "span", "mark"];
+const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark"];
 const ALLOWED_ATTR = ["style"];
 
 export function sanitizeBodyHtml(html: string): string {

@@ -28,9 +28,6 @@ export default function PageEditorForm({ initialSlug, initialPage }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(initialPage?.title ?? "");
   const [slug, setSlug] = useState(initialPage?.slug ?? initialSlug);
-  const [ctaLabel, setCtaLabel] = useState(initialPage?.ctaLabel ?? "상담 신청하기");
-  const [ctaHref, setCtaHref] = useState(initialPage?.ctaHref ?? "");
-  const [ctaColor, setCtaColor] = useState(initialPage?.ctaColor ?? "#FEE500");
   const [blocks, setBlocks] = useState<EditableBlock[]>(withKeys(initialPage?.blocks ?? []));
   const [saving, setSaving] = useState<SavingState>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,9 +48,6 @@ export default function PageEditorForm({ initialSlug, initialPage }: Props) {
       slug,
       status,
       blocks: stripKeys(blocks),
-      ctaLabel,
-      ctaHref,
-      ctaColor,
     };
 
     const url = pageId ? `/api/pages/${pageId}` : "/api/pages";
@@ -140,33 +134,6 @@ export default function PageEditorForm({ initialSlug, initialPage }: Props) {
       </div>
 
       <BlockList blocks={blocks} onChange={setBlocks} />
-
-      <div className="space-y-2 border-t border-gray-200 pt-4">
-        <label className="block text-sm font-medium text-gray-700">CTA 버튼</label>
-        <input
-          type="text"
-          placeholder="버튼 텍스트 (예: 상담 신청하기)"
-          value={ctaLabel}
-          onChange={(e) => setCtaLabel(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
-        />
-        <input
-          type="text"
-          placeholder="링크 (https://... 또는 tel:01012345678)"
-          value={ctaHref}
-          onChange={(e) => setCtaHref(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
-        />
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-700">버튼 색상</label>
-          <input
-            type="color"
-            value={ctaColor}
-            onChange={(e) => setCtaColor(e.target.value)}
-            className="h-8 w-12"
-          />
-        </div>
-      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

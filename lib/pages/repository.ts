@@ -8,9 +8,6 @@ type PageRow = {
   title: string;
   status: string;
   blocks: Block[];
-  cta_label: string;
-  cta_href: string;
-  cta_color: string;
   created_at: string;
   updated_at: string;
   published_at: string | null;
@@ -42,9 +39,6 @@ function rowToRecord(row: PageRow): PageRecord {
     title: row.title,
     status: row.status as PageStatus,
     blocks: row.blocks,
-    ctaLabel: row.cta_label,
-    ctaHref: row.cta_href,
-    ctaColor: row.cta_color,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     publishedAt: row.published_at,
@@ -109,9 +103,6 @@ export async function createPage(input: PageInput): Promise<PageRecord> {
       title: input.title,
       status: input.status,
       blocks: input.blocks,
-      cta_label: input.ctaLabel,
-      cta_href: input.ctaHref,
-      cta_color: input.ctaColor,
       published_at: input.status === "published" ? new Date().toISOString() : null,
     })
     .select("*")
@@ -134,9 +125,6 @@ export async function updatePage(id: string, input: PageInput): Promise<PageReco
       title: input.title,
       status: input.status,
       blocks: input.blocks,
-      cta_label: input.ctaLabel,
-      cta_href: input.ctaHref,
-      cta_color: input.ctaColor,
       updated_at: new Date().toISOString(),
       ...(publishedAt ? { published_at: publishedAt } : {}),
     })

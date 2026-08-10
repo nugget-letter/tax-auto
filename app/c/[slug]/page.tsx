@@ -54,12 +54,21 @@ export default async function PublicPage({
         {page.blocks.map((block, index) => {
           if (block.type === "banner") return <BannerBlock key={index} block={block} />;
           if (block.type === "text") return <TextBlock key={index} block={block} />;
+          if (block.type === "cta") {
+            return (
+              <CtaButton
+                key={index}
+                label={block.label}
+                href={block.href}
+                color={block.color}
+              />
+            );
+          }
           // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
           // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
           return null;
         })}
       </div>
-      <CtaButton label={page.ctaLabel} href={page.ctaHref} color={page.ctaColor} />
     </main>
   );
 }

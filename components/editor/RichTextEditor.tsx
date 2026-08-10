@@ -50,10 +50,8 @@ export default function RichTextEditor({ value, onChange }: Props) {
         blockquote: false,
         codeBlock: false,
         code: false,
-        strike: false,
         horizontalRule: false,
         link: false,
-        underline: false,
       }),
       TextStyleKit.configure({
         backgroundColor: false,
@@ -86,6 +84,20 @@ export default function RichTextEditor({ value, onChange }: Props) {
           className={`rounded px-2 py-1 text-sm italic ${editor.isActive("italic") ? "bg-gray-200" : ""}`}
         >
           I
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={`rounded px-2 py-1 text-sm underline ${editor.isActive("underline") ? "bg-gray-200" : ""}`}
+        >
+          U
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`rounded px-2 py-1 text-sm line-through ${editor.isActive("strike") ? "bg-gray-200" : ""}`}
+        >
+          S
         </button>
         <select
           className="rounded border border-gray-200 px-1 text-sm"
