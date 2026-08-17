@@ -19,6 +19,7 @@ export default function ScrollReveal({ effect, children }: Props) {
 
   useEffect(() => {
     if (!effect || effect === "none") return;
+    if (typeof IntersectionObserver === "undefined") return;
 
     const node = ref.current;
     if (!node) return;
@@ -32,7 +33,7 @@ export default function ScrollReveal({ effect, children }: Props) {
           observer.unobserve(node);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0, rootMargin: "0px 0px -15% 0px" }
     );
 
     observer.observe(node);

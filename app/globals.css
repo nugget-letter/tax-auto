@@ -33,6 +33,7 @@ body {
 }
 .scroll-reveal[data-state="hidden"] {
   opacity: 0;
+  transition: none;
 }
 .scroll-reveal[data-effect="fade-up"][data-state="hidden"] {
   transform: translateY(24px);

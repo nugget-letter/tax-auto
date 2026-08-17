@@ -52,7 +52,7 @@ export default async function PublicPage({
   return (
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 overflow-x-clip">
         {page.blocks.map((block, index) => {
           if (block.type === "banner")
             return (

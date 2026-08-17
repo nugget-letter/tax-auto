@@ -22,6 +22,7 @@ export default function DuplicateButton({ id }: { id: string }) {
       }
 
       const record: PageRecord = await response.json();
+      router.refresh();
       router.push(`/admin/${record.id}/edit`);
     } catch {
       setError("복제에 실패했어요. 다시 로그인해야 할 수 있어요.");
