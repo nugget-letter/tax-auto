@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import Highlight from "@tiptap/extension-highlight";
 import { LetterSpacing } from "@/lib/tiptap/letterSpacing";
+import { TextAlign } from "@/lib/tiptap/textAlign";
 import { DividerNode } from "@/lib/tiptap/dividerNode";
 import { DIVIDER_STYLE_PRESETS } from "@/lib/pages/dividerStyle";
 import type { DividerStyle } from "@/lib/pages/types";
@@ -60,6 +61,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
         backgroundColor: false,
       }),
       LetterSpacing,
+      TextAlign,
       Highlight,
       DividerNode,
     ],
