@@ -52,30 +52,36 @@ export default async function PublicPage({
   return (
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
-      <div className="divide-y divide-gray-100 overflow-x-clip">
+      <div className="overflow-x-clip">
         {page.blocks.map((block, index) => {
+          const isFirst = index === 0;
           if (block.type === "banner")
             return (
               <ScrollReveal key={index} effect={block.scrollEffect}>
-                <BannerBlock block={block} />
+                <BannerBlock block={block} isFirst={isFirst} />
               </ScrollReveal>
             );
           if (block.type === "text")
             return (
               <ScrollReveal key={index} effect={block.scrollEffect}>
-                <TextBlock block={block} />
+                <TextBlock block={block} isFirst={isFirst} />
               </ScrollReveal>
             );
           if (block.type === "divider")
             return (
               <ScrollReveal key={index} effect={block.scrollEffect}>
-                <DividerBlock />
+                <DividerBlock style={block.style} />
               </ScrollReveal>
             );
           if (block.type === "cta") {
             return (
               <ScrollReveal key={index} effect={block.scrollEffect}>
-                <CtaButton label={block.label} href={block.href} color={block.color} />
+                <CtaButton
+                  label={block.label}
+                  href={block.href}
+                  color={block.color}
+                  isFirst={isFirst}
+                />
               </ScrollReveal>
             );
           }
