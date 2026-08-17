@@ -5,6 +5,9 @@ import StarterKit from "@tiptap/starter-kit";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import Highlight from "@tiptap/extension-highlight";
 import { LetterSpacing } from "@/lib/tiptap/letterSpacing";
+import { DividerNode } from "@/lib/tiptap/dividerNode";
+import { DIVIDER_STYLE_PRESETS } from "@/lib/pages/dividerStyle";
+import type { DividerStyle } from "@/lib/pages/types";
 
 const FONT_SIZES = ["14px", "16px", "20px", "24px"];
 
@@ -58,6 +61,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
       }),
       LetterSpacing,
       Highlight,
+      DividerNode,
     ],
     content: value,
     immediatelyRender: false,
@@ -198,6 +202,27 @@ export default function RichTextEditor({ value, onChange }: Props) {
         >
           강조
         </button>
+        <select
+          className="rounded border border-gray-200 px-1 text-sm"
+          defaultValue="placeholder"
+          onChange={(e) => {
+            const variant = e.target.value as DividerStyle;
+            const preset = DIVIDER_STYLE_PRESETS[variant];
+            if (preset.kind === "dots") {
+              editor.chain().focus().insertContent('<p style="text-align:center">• • •</p>').run();
+            } else {
+              editor.chain().focus().insertContent({ type: "divider", attrs: { variant } }).run();
+            }
+            e.target.value = "placeholder";
+          }}
+        >
+          <option value="placeholder">구분선 삽입</option>
+          {Object.entries(DIVIDER_STYLE_PRESETS).map(([id, preset]) => (
+            <option key={id} value={id}>
+              {preset.label}
+            </option>
+          ))}
+        </select>
       </div>
       <EditorContent editor={editor} className="rich-text p-3 text-sm" />
     </div>
