@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { BannerBlock } from "@/lib/pages/types";
+import ScrollEffectSelect from "./ScrollEffectSelect";
 
 type Props = {
   block: BannerBlock;
@@ -72,6 +73,10 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
         value={block.subtitle ?? ""}
         onChange={(e) => onChange({ ...block, subtitle: e.target.value })}
         className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+      />
+      <ScrollEffectSelect
+        value={block.scrollEffect}
+        onChange={(scrollEffect) => onChange({ ...block, scrollEffect })}
       />
     </div>
   );

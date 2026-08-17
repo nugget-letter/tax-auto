@@ -1,6 +1,7 @@
 "use client";
 
 import type { CtaBlock } from "@/lib/pages/types";
+import ScrollEffectSelect from "./ScrollEffectSelect";
 
 type Props = {
   block: CtaBlock;
@@ -34,6 +35,10 @@ export default function CtaBlockEditor({ block, onChange }: Props) {
           className="h-8 w-12"
         />
       </div>
+      <ScrollEffectSelect
+        value={block.scrollEffect}
+        onChange={(scrollEffect) => onChange({ ...block, scrollEffect })}
+      />
     </div>
   );
 }
