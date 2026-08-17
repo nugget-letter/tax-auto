@@ -495,7 +495,9 @@ git commit -m "feat: allow hr tag and border/text-align styles in sanitized rich
 - Consumes: `DIVIDER_STYLE_PRESETS`, `DEFAULT_DIVIDER_STYLE`(`@/lib/pages/dividerStyle`, Task 1), `DividerStyle`(`@/lib/pages/types`, Task 1).
 - Produces: `DividerNode`(Tiptap `Node`, 이름 `"divider"`) — Task 7에서 `RichTextEditor.tsx`의 `extensions` 배열에 추가하고, `insertContent({ type: "divider", attrs: { variant } })`로 삽입.
 
-이 노드는 `@tiptap/extension-horizontal-rule`을 import하지 않고 `@tiptap/core`의 `Node.create()`로 직접 작성한다(해당 패키지는 이 프로젝트의 `package.json` 의존성이 아니다). 저장된 HTML은 `<hr style="border-top: ...">` 형태이며, 에디터에 다시 불러올 때 그 `style` 값을 보고 어떤 프리셋이었는지 역추적한다(별도 데이터 속성 없이 스타일 값 자체가 유일한 소스).
+이 노드는 `@tiptap/extension-horizontal-rule`을 import하지 않고 `@tiptap/core`의 `Node.create()`로 직접 작성한다(해당 패키지는 이 프로젝트의 `package.json` 의존성이 아니다).
+
+**중요 — 반드시 longhand 속성으로 렌더링한다.** Task 5에서 확장한 sanitizer(`lib/sanitize.ts`)의 `allowedStyles`는 `border-top`(축약형)이 아니라 `border-top-width`/`border-top-style`/`border-top-color`(개별 속성)만 화이트리스트에 있다. `sanitize-html`은 축약형 속성을 개별 속성으로 분해해서 매칭해주지 않으므로, 이 노드가 `<hr style="border-top: 1px solid #E5E7EB">`처럼 축약형으로 렌더링하면 저장 시 sanitizer가 `style` 속성 전체를 제거해버려 인라인 구분선의 스타일이 사라진다. 따라서 `styleAttrFor`는 `DIVIDER_STYLE_PRESETS`의 `borderTop` 값("1px solid #E5E7EB" 형태)을 파싱해 개별 속성 세 개로 나눠 출력해야 한다. 저장된 HTML은 `<hr style="border-top-width: ...; border-top-style: ...; border-top-color: ...">` 형태이며, 에디터에 다시 불러올 때 그 값들을 보고 어떤 프리셋이었는지 역추적한다(별도 데이터 속성 없이 스타일 값 자체가 유일한 소스).
 
 - [ ] **Step 1: `lib/tiptap/dividerNode.ts` 작성**
 
@@ -504,21 +506,31 @@ import { Node } from "@tiptap/core";
 import { DIVIDER_STYLE_PRESETS, DEFAULT_DIVIDER_STYLE } from "@/lib/pages/dividerStyle";
 import type { DividerStyle } from "@/lib/pages/types";
 
+function parseBorderTop(borderTop: string): { width: string; style: string; color: string } | null {
+  const match = borderTop.match(/^(\d+px)\s+(solid|dashed|dotted)\s+(#[0-9a-fA-F]{3,8})$/);
+  if (!match) return null;
+  return { width: match[1], style: match[2], color: match[3] };
+}
+
+// sanitizer(lib/sanitize.ts)가 border-top 축약형이 아니라 border-top-width/style/color
+// 개별 속성만 허용하므로, 반드시 longhand로 렌더링해야 저장 시 스타일이 살아남는다.
 function styleAttrFor(variant: DividerStyle): string {
   const preset = DIVIDER_STYLE_PRESETS[variant];
-  return preset.kind === "line" ? `border-top: ${preset.borderTop}` : "";
+  if (preset.kind !== "line") return "";
+  const parsed = parseBorderTop(preset.borderTop);
+  if (!parsed) return "";
+  return `border-top-width: ${parsed.width}; border-top-style: ${parsed.style}; border-top-color: ${parsed.color}`;
 }
 
 function variantFromStyleAttr(styleAttr: string | null): DividerStyle {
   if (!styleAttr) return DEFAULT_DIVIDER_STYLE;
   const normalized = styleAttr.replace(/\s+/g, "");
   for (const [id, preset] of Object.entries(DIVIDER_STYLE_PRESETS)) {
-    if (
-      preset.kind === "line" &&
-      normalized === `border-top:${preset.borderTop}`.replace(/\s+/g, "")
-    ) {
-      return id as DividerStyle;
-    }
+    if (preset.kind !== "line") continue;
+    const parsed = parseBorderTop(preset.borderTop);
+    if (!parsed) continue;
+    const expected = `border-top-width:${parsed.width};border-top-style:${parsed.style};border-top-color:${parsed.color}`;
+    if (normalized === expected) return id as DividerStyle;
   }
   return DEFAULT_DIVIDER_STYLE;
 }
