@@ -25,3 +25,38 @@ body {
   background-color: #fff3a3;
   padding: 0 0.15em;
 }
+
+.scroll-reveal {
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+.scroll-reveal[data-state="hidden"] {
+  opacity: 0;
+}
+.scroll-reveal[data-effect="fade-up"][data-state="hidden"] {
+  transform: translateY(24px);
+}
+.scroll-reveal[data-effect="slide-left"][data-state="hidden"] {
+  transform: translateX(-40px);
+}
+.scroll-reveal[data-effect="slide-right"][data-state="hidden"] {
+  transform: translateX(40px);
+}
+.scroll-reveal[data-effect="scale"][data-state="hidden"] {
+  transform: scale(0.92);
+}
+.scroll-reveal[data-state="revealed"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    transition: none;
+  }
+  .scroll-reveal[data-state="hidden"] {
+    opacity: 1;
+    transform: none;
+  }
+}
