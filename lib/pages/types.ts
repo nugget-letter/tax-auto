@@ -10,6 +10,9 @@ export const scrollEffectSchema = z.enum([
 ]);
 export type ScrollEffect = z.infer<typeof scrollEffectSchema>;
 
+export const dividerStyleSchema = z.enum(["solid-light", "solid-dark", "dotted", "dashed", "dots"]);
+export type DividerStyle = z.infer<typeof dividerStyleSchema>;
+
 export const bannerBlockSchema = z.object({
   type: z.literal("banner"),
   imageUrl: z.string().min(1),
@@ -41,6 +44,7 @@ export const ctaBlockSchema = z.object({
 
 export const dividerBlockSchema = z.object({
   type: z.literal("divider"),
+  style: dividerStyleSchema.optional(),
   scrollEffect: scrollEffectSchema.optional(),
 });
 export type DividerBlock = z.infer<typeof dividerBlockSchema>;
