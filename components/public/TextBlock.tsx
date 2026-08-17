@@ -1,8 +1,14 @@
 import type { TextBlock as TextBlockType } from "@/lib/pages/types";
 
-export default function TextBlock({ block }: { block: TextBlockType }) {
+export default function TextBlock({
+  block,
+  hasBorderAfter,
+}: {
+  block: TextBlockType;
+  hasBorderAfter: boolean;
+}) {
   return (
-    <div className="mx-auto max-w-xl px-6 py-6">
+    <div className={`mx-auto max-w-xl px-6 py-6 ${hasBorderAfter ? "border-b border-gray-100" : ""}`}>
       {block.heading && (
         <h2 className="mb-3 font-serif text-lg font-bold text-gray-900">{block.heading}</h2>
       )}

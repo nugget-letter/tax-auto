@@ -2,6 +2,7 @@
 
 import type { TextBlock } from "@/lib/pages/types";
 import RichTextEditor from "./RichTextEditor";
+import ScrollEffectSelect from "./ScrollEffectSelect";
 
 type Props = {
   block: TextBlock;
@@ -22,6 +23,10 @@ export default function TextBlockEditor({ block, onChange }: Props) {
       <RichTextEditor
         value={block.bodyHtml}
         onChange={(bodyHtml) => onChange({ ...block, bodyHtml })}
+      />
+      <ScrollEffectSelect
+        value={block.scrollEffect}
+        onChange={(scrollEffect) => onChange({ ...block, scrollEffect })}
       />
     </div>
   );

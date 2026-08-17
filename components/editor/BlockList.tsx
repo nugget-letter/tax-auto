@@ -4,13 +4,15 @@ import type { Block } from "@/lib/pages/types";
 import BannerBlockEditor from "./BannerBlockEditor";
 import TextBlockEditor from "./TextBlockEditor";
 import CtaBlockEditor from "./CtaBlockEditor";
+import DividerBlockEditor from "./DividerBlockEditor";
 
 export type EditableBlock = Block & { _key: string };
 
 function createDefaultBlock(type: Block["type"]): Block {
   if (type === "banner") return { type: "banner", imageUrl: "", title: "", subtitle: "" };
   if (type === "text") return { type: "text", heading: "", bodyHtml: "<p></p>" };
-  return { type: "cta", label: "상담 신청하기", href: "", color: "#FEE500" };
+  if (type === "cta") return { type: "cta", label: "상담 신청하기", href: "", color: "#FEE500" };
+  return { type: "divider" };
 }
 
 type Props = {
@@ -77,6 +79,9 @@ export default function BlockList({ blocks, onChange }: Props) {
           {block.type === "cta" && (
             <CtaBlockEditor block={block} onChange={(b) => updateBlock(index, b)} />
           )}
+          {block.type === "divider" && (
+            <DividerBlockEditor block={block} onChange={(b) => updateBlock(index, b)} />
+          )}
         </div>
       ))}
       <div className="flex flex-wrap gap-2 border-t border-gray-200 pt-3">
@@ -100,6 +105,13 @@ export default function BlockList({ blocks, onChange }: Props) {
           className="rounded border border-gray-300 px-3 py-1 text-sm"
         >
           + CTA 버튼
+        </button>
+        <button
+          type="button"
+          onClick={() => addBlock("divider")}
+          className="rounded border border-gray-300 px-3 py-1 text-sm"
+        >
+          + 구분선
         </button>
       </div>
     </div>

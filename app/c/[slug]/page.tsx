@@ -7,6 +7,8 @@ import BannerBlock from "@/components/public/BannerBlock";
 import TextBlock from "@/components/public/TextBlock";
 import CtaButton from "@/components/public/CtaButton";
 import PreviewBanner from "@/components/public/PreviewBanner";
+import DividerBlock from "@/components/public/DividerBlock";
+import ScrollReveal from "@/components/public/ScrollReveal";
 
 export const dynamic = "force-dynamic";
 
@@ -50,24 +52,64 @@ export default async function PublicPage({
   return (
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
-      <div className="divide-y divide-gray-100">
-        {page.blocks.map((block, index) => {
-          if (block.type === "banner") return <BannerBlock key={index} block={block} />;
-          if (block.type === "text") return <TextBlock key={index} block={block} />;
-          if (block.type === "cta") {
-            return (
-              <CtaButton
-                key={index}
-                label={block.label}
-                href={block.href}
-                color={block.color}
-              />
-            );
-          }
-          // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
-          // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
-          return null;
-        })}
+      <div className="overflow-x-clip">
+        {(() => {
+          const AUTO_BORDER_TYPES = ["banner", "text", "cta"];
+          const SUBSTANTIVE_TYPES = ["banner", "text", "cta", "divider"];
+
+          // "실제로 렌더링되는" 블록(알 수 없는 타입은 제외)들의 인덱스만 순서대로 모은다.
+          const substantiveIndices = page.blocks
+            .map((b, i) => ({ type: b.type, index: i }))
+            .filter(({ type }) => SUBSTANTIVE_TYPES.includes(type))
+            .map(({ index }) => index);
+
+          return page.blocks.map((block, index) => {
+            const posInSubstantive = substantiveIndices.indexOf(index);
+            const nextIndex = substantiveIndices[posInSubstantive + 1];
+            const nextBlock = nextIndex !== undefined ? page.blocks[nextIndex] : undefined;
+            // 배너/텍스트/CTA는 "바로 다음에 오는 실제 블록"도 배너/텍스트/CTA일 때만
+            // 아래쪽에 얇은 회색 선을 그린다 — 구분선 앞뒤에서는 구분선이 이미 자기
+            // 선을 그리므로 이중으로 선이 생기지 않는다.
+            const hasBorderAfter =
+              AUTO_BORDER_TYPES.includes(block.type) &&
+              nextBlock !== undefined &&
+              AUTO_BORDER_TYPES.includes(nextBlock.type);
+
+            if (block.type === "banner")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <BannerBlock block={block} hasBorderAfter={hasBorderAfter} />
+                </ScrollReveal>
+              );
+            if (block.type === "text")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <TextBlock block={block} hasBorderAfter={hasBorderAfter} />
+                </ScrollReveal>
+              );
+            if (block.type === "divider")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <DividerBlock style={block.style} />
+                </ScrollReveal>
+              );
+            if (block.type === "cta") {
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <CtaButton
+                    label={block.label}
+                    href={block.href}
+                    color={block.color}
+                    hasBorderAfter={hasBorderAfter}
+                  />
+                </ScrollReveal>
+              );
+            }
+            // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
+            // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
+            return null;
+          });
+        })()}
       </div>
     </main>
   );

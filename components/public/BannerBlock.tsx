@@ -1,8 +1,14 @@
 import type { BannerBlock as BannerBlockType } from "@/lib/pages/types";
 
-export default function BannerBlock({ block }: { block: BannerBlockType }) {
+export default function BannerBlock({
+  block,
+  hasBorderAfter,
+}: {
+  block: BannerBlockType;
+  hasBorderAfter: boolean;
+}) {
   return (
-    <figure className="w-full">
+    <figure className={`w-full ${hasBorderAfter ? "border-b border-gray-100" : ""}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={block.imageUrl} alt={block.title ?? ""} className="w-full object-cover" />
       {(block.title || block.subtitle) && (
