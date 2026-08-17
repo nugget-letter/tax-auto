@@ -4,7 +4,7 @@ import type { PageInput } from "./pages/types";
 // isomorphic-dompurify(jsdom 기반)는 Vercel 서버리스 번들에서
 // "require() of ES Module ... not supported" 크래시가 나서(로컬 next dev/build에서는
 // 우연히 재현되지 않았다) htmlparser2 기반의 sanitize-html로 교체했다 — jsdom 의존성이 없다.
-const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark"];
+const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark", "hr"];
 
 const COLOR_PATTERNS = [
   /^#[0-9a-fA-F]{3,8}$/,
@@ -29,6 +29,10 @@ export function sanitizeBodyHtml(html: string): string {
         "font-size": [/^\d+(\.\d+)?px$/],
         "letter-spacing": [/^-?\d+(\.\d+)?em$/],
         "line-height": [/^\d+(\.\d+)?$/],
+        "border-top-style": [/^(solid|dashed|dotted)$/],
+        "border-top-color": COLOR_PATTERNS,
+        "border-top-width": [/^[12]px$/],
+        "text-align": [/^(left|center|right)$/],
       },
     },
   });
