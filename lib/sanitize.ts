@@ -21,6 +21,7 @@ export function sanitizeBodyHtml(html: string): string {
     // 리치 에디터(components/editor/RichTextEditor.tsx)가 실제로 생성하는 인라인
     // 스타일만 허용한다 — 굵게/기울임/밑줄/취소선/강조는 태그 자체로 표현되고,
     // 글꼴/글자크기/자간/행간/색상만 style 속성을 쓴다.
+    // 구분선(hr)의 테두리 스타일과 문단 정렬(text-align)도 같은 방식으로 허용한다.
     allowedStyles: {
       "*": {
         color: COLOR_PATTERNS,

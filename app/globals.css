@@ -25,6 +25,9 @@ body {
   background-color: #fff3a3;
   padding: 0 0.15em;
 }
+.rich-text hr {
+  margin: 1.5em 0;
+}
 
 .scroll-reveal {
   transition:

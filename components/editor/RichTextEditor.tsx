@@ -41,7 +41,7 @@ type Props = {
 
 export default function RichTextEditor({ value, onChange }: Props) {
   const editor = useEditor({
-    // 저장 시 sanitizer(lib/sanitize.ts)가 허용하는 태그는 p/br/strong/em/span/mark 뿐이라
+    // 저장 시 sanitizer(lib/sanitize.ts)가 허용하는 태그는 p/br/strong/em/u/s/span/mark/hr 뿐이라
     // 그 외 노드는 마크다운/단축키로 입력해도 저장 때 래퍼가 벗겨져 내용이 조용히 뭉개진다.
     // 그래서 툴바가 실제로 노출하는 기능만 남기고 비활성화한다. 글꼴/색상/자간/행간은 모두
     // textStyle 마크가 span style=""로 렌더링하므로 별도 태그 허용이 필요 없다.
@@ -210,8 +210,15 @@ export default function RichTextEditor({ value, onChange }: Props) {
           onChange={(e) => {
             const variant = e.target.value as DividerStyle;
             const preset = DIVIDER_STYLE_PRESETS[variant];
+            if (!preset) return;
             if (preset.kind === "dots") {
-              editor.chain().focus().insertContent('<p style="text-align:center">• • •</p>').run();
+              editor
+                .chain()
+                .focus()
+                .insertContent(
+                  `<p style="text-align:center"><span style="color:${preset.color};font-size:${preset.fontSize};letter-spacing:${preset.letterSpacing}">• • •</span></p>`
+                )
+                .run();
             } else {
               editor.chain().focus().insertContent({ type: "divider", attrs: { variant } }).run();
             }

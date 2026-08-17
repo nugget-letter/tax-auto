@@ -54,27 +54,37 @@ export default async function PublicPage({
       {page.status !== "published" && <PreviewBanner />}
       <div className="overflow-x-clip">
         {(() => {
-          let renderedCount = 0;
+          const AUTO_BORDER_TYPES = ["banner", "text", "cta"];
+          const SUBSTANTIVE_TYPES = ["banner", "text", "cta", "divider"];
+
+          // "실제로 렌더링되는" 블록(알 수 없는 타입은 제외)들의 인덱스만 순서대로 모은다.
+          const substantiveIndices = page.blocks
+            .map((b, i) => ({ type: b.type, index: i }))
+            .filter(({ type }) => SUBSTANTIVE_TYPES.includes(type))
+            .map(({ index }) => index);
+
           return page.blocks.map((block, index) => {
-            const isKnownType =
-              block.type === "banner" ||
-              block.type === "text" ||
-              block.type === "cta" ||
-              block.type === "divider";
-            const isFirst = isKnownType && renderedCount === 0;
-            // eslint-disable-next-line react-hooks/immutability
-            if (isKnownType) renderedCount += 1;
+            const posInSubstantive = substantiveIndices.indexOf(index);
+            const nextIndex = substantiveIndices[posInSubstantive + 1];
+            const nextBlock = nextIndex !== undefined ? page.blocks[nextIndex] : undefined;
+            // 배너/텍스트/CTA는 "바로 다음에 오는 실제 블록"도 배너/텍스트/CTA일 때만
+            // 아래쪽에 얇은 회색 선을 그린다 — 구분선 앞뒤에서는 구분선이 이미 자기
+            // 선을 그리므로 이중으로 선이 생기지 않는다.
+            const hasBorderAfter =
+              AUTO_BORDER_TYPES.includes(block.type) &&
+              nextBlock !== undefined &&
+              AUTO_BORDER_TYPES.includes(nextBlock.type);
 
             if (block.type === "banner")
               return (
                 <ScrollReveal key={index} effect={block.scrollEffect}>
-                  <BannerBlock block={block} isFirst={isFirst} />
+                  <BannerBlock block={block} hasBorderAfter={hasBorderAfter} />
                 </ScrollReveal>
               );
             if (block.type === "text")
               return (
                 <ScrollReveal key={index} effect={block.scrollEffect}>
-                  <TextBlock block={block} isFirst={isFirst} />
+                  <TextBlock block={block} hasBorderAfter={hasBorderAfter} />
                 </ScrollReveal>
               );
             if (block.type === "divider")
@@ -90,7 +100,7 @@ export default async function PublicPage({
                     label={block.label}
                     href={block.href}
                     color={block.color}
-                    isFirst={isFirst}
+                    hasBorderAfter={hasBorderAfter}
                   />
                 </ScrollReveal>
               );
