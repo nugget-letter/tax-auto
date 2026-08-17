@@ -1,16 +1,28 @@
 import { z } from "zod";
 
+export const scrollEffectSchema = z.enum([
+  "none",
+  "fade",
+  "fade-up",
+  "slide-left",
+  "slide-right",
+  "scale",
+]);
+export type ScrollEffect = z.infer<typeof scrollEffectSchema>;
+
 export const bannerBlockSchema = z.object({
   type: z.literal("banner"),
   imageUrl: z.string().min(1),
   title: z.string().optional(),
   subtitle: z.string().optional(),
+  scrollEffect: scrollEffectSchema.optional(),
 });
 
 export const textBlockSchema = z.object({
   type: z.literal("text"),
   heading: z.string().optional(),
   bodyHtml: z.string(),
+  scrollEffect: scrollEffectSchema.optional(),
 });
 
 export const ctaBlockSchema = z.object({
@@ -24,12 +36,20 @@ export const ctaBlockSchema = z.object({
       message: "링크는 https:// 또는 tel:로 시작해야 해요.",
     }),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "색상은 #RRGGBB 형식이어야 해요"),
+  scrollEffect: scrollEffectSchema.optional(),
 });
+
+export const dividerBlockSchema = z.object({
+  type: z.literal("divider"),
+  scrollEffect: scrollEffectSchema.optional(),
+});
+export type DividerBlock = z.infer<typeof dividerBlockSchema>;
 
 export const blockSchema = z.discriminatedUnion("type", [
   bannerBlockSchema,
   textBlockSchema,
   ctaBlockSchema,
+  dividerBlockSchema,
 ]);
 
 export type BannerBlock = z.infer<typeof bannerBlockSchema>;
