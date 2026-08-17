@@ -55,7 +55,11 @@ body {
   .scroll-reveal {
     transition: none;
   }
-  .scroll-reveal[data-state="hidden"] {
+  .scroll-reveal[data-state="hidden"],
+  .scroll-reveal[data-effect="fade-up"][data-state="hidden"],
+  .scroll-reveal[data-effect="slide-left"][data-state="hidden"],
+  .scroll-reveal[data-effect="slide-right"][data-state="hidden"],
+  .scroll-reveal[data-effect="scale"][data-state="hidden"] {
     opacity: 1;
     transform: none;
   }
