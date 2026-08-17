@@ -53,42 +53,53 @@ export default async function PublicPage({
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
       <div className="overflow-x-clip">
-        {page.blocks.map((block, index) => {
-          const isFirst = index === 0;
-          if (block.type === "banner")
-            return (
-              <ScrollReveal key={index} effect={block.scrollEffect}>
-                <BannerBlock block={block} isFirst={isFirst} />
-              </ScrollReveal>
-            );
-          if (block.type === "text")
-            return (
-              <ScrollReveal key={index} effect={block.scrollEffect}>
-                <TextBlock block={block} isFirst={isFirst} />
-              </ScrollReveal>
-            );
-          if (block.type === "divider")
-            return (
-              <ScrollReveal key={index} effect={block.scrollEffect}>
-                <DividerBlock style={block.style} />
-              </ScrollReveal>
-            );
-          if (block.type === "cta") {
-            return (
-              <ScrollReveal key={index} effect={block.scrollEffect}>
-                <CtaButton
-                  label={block.label}
-                  href={block.href}
-                  color={block.color}
-                  isFirst={isFirst}
-                />
-              </ScrollReveal>
-            );
-          }
-          // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
-          // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
-          return null;
-        })}
+        {(() => {
+          let renderedCount = 0;
+          return page.blocks.map((block, index) => {
+            const isKnownType =
+              block.type === "banner" ||
+              block.type === "text" ||
+              block.type === "cta" ||
+              block.type === "divider";
+            const isFirst = isKnownType && renderedCount === 0;
+            // eslint-disable-next-line react-hooks/immutability
+            if (isKnownType) renderedCount += 1;
+
+            if (block.type === "banner")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <BannerBlock block={block} isFirst={isFirst} />
+                </ScrollReveal>
+              );
+            if (block.type === "text")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <TextBlock block={block} isFirst={isFirst} />
+                </ScrollReveal>
+              );
+            if (block.type === "divider")
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <DividerBlock style={block.style} />
+                </ScrollReveal>
+              );
+            if (block.type === "cta") {
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <CtaButton
+                    label={block.label}
+                    href={block.href}
+                    color={block.color}
+                    isFirst={isFirst}
+                  />
+                </ScrollReveal>
+              );
+            }
+            // 알 수 없는 블록 타입(과거 숫자카드 데이터, 수동 편집/스키마 변경)은
+            // 공개 페이지를 500으로 떨어뜨리지 않도록 조용히 건너뛴다.
+            return null;
+          });
+        })()}
       </div>
     </main>
   );
