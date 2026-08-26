@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { pageInputSchema } from "@/lib/pages/types";
-import { updatePage, SlugConflictError } from "@/lib/pages/repository";
+import { updatePage, deletePage, SlugConflictError } from "@/lib/pages/repository";
 import { requireAdminSession } from "@/lib/auth/session";
 import { sanitizePageInputHtml } from "@/lib/sanitize";
 
@@ -38,5 +38,25 @@ export async function PATCH(
     }
     console.error("[pages] 수정 실패", error);
     return NextResponse.json({ error: "save_failed" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const authorized = await requireAdminSession(request);
+  if (!authorized) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  try {
+    await deletePage(id);
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error("[pages] 삭제 실패", error);
+    return NextResponse.json({ error: "delete_failed" }, { status: 500 });
   }
 }

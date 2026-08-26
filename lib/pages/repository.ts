@@ -155,3 +155,9 @@ export async function updatePageStatus(id: string, status: PageStatus): Promise<
   if (error) throw error;
   return rowToRecord(data as PageRow);
 }
+
+export async function deletePage(id: string): Promise<void> {
+  const supabase = getSupabaseServerClient();
+  const { error } = await supabase.from("pages").delete().eq("id", id);
+  if (error) throw error;
+}
