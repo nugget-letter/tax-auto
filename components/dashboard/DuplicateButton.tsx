@@ -46,7 +46,7 @@ export default function DuplicateButton({ id }: { id: string }) {
         복제
       </ActionButton>
       {error && (
-        <Text as="p" textStyle="t10Regular" color="fg.critical" className="mt-1 text-right">
+        <Text as="p" textStyle="t2Regular" color="fg.critical" className="mt-1 text-right">
           {error}
         </Text>
       )}

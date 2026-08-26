@@ -31,7 +31,7 @@ export default async function PublishedUrlsPage() {
       </p>
 
       {everPublished.length === 0 ? (
-        <Text as="p" textStyle="t9Regular" color="fg.neutralSubtle" className="mt-6">
+        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-6">
           아직 발행된 페이지가 없어요.
         </Text>
       ) : (
@@ -52,11 +52,11 @@ export default async function PublishedUrlsPage() {
                 <Box minWidth="0" flexGrow={1}>
                   <HStack align="center" gap="x2" minWidth="0">
                     <StatusBadge status={page.status} />
-                    <Text as="p" textStyle="t7Bold" color="fg.neutral" maxLines={1}>
+                    <Text as="p" textStyle="t4Medium" color="fg.neutral" maxLines={1}>
                       {page.title}
                     </Text>
                   </HStack>
-                  <Text as="p" textStyle="t10Regular" color="fg.neutralSubtle" className="mt-1">
+                  <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
                     발행일 {formatDate(page.publishedAt!)}
                   </Text>
                   <input

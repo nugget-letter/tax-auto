@@ -30,11 +30,11 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
       <Box minWidth="0" flexGrow={1}>
         <HStack align="center" gap="x2" minWidth="0">
           <StatusBadge status={page.status} />
-          <Text as="span" textStyle="t7Bold" color="fg.neutral" maxLines={1}>
+          <Text as="span" textStyle="t4Medium" color="fg.neutral" maxLines={1}>
             {page.title}
           </Text>
         </HStack>
-        <Text as="p" textStyle="t10Regular" color="fg.neutralSubtle" className="mt-1">
+        <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
         </Text>
       </Box>
@@ -54,7 +54,7 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
 export default function PagesTable({ pages }: { pages: PageRecord[] }) {
   if (pages.length === 0) {
     return (
-      <Text as="p" textStyle="t9Regular" color="fg.neutralSubtle">
+      <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle">
         아직 생성된 페이지가 없어요.
       </Text>
     );
@@ -68,7 +68,7 @@ export default function PagesTable({ pages }: { pages: PageRecord[] }) {
 
         return (
           <Box key={status}>
-            <Text as="h2" textStyle="t11Bold" color="fg.neutralSubtle" className="mb-2">
+            <Text as="h2" textStyle="t2Bold" color="fg.neutralSubtle" className="mb-2">
               {heading} ({groupPages.length})
             </Text>
             <Box as="ul" borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
