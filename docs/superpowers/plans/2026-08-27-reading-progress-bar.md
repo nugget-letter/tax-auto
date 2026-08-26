@@ -89,7 +89,7 @@ export default function ReadingProgressBar() {
 }
 ```
 
-(초기 `style={{ transform: "scaleX(0)" }}`은 `useEffect`의 첫 `update()` 호출 전에 렌더링될 때(즉 `visible`이 `true`가 된 첫 프레임)에도 바가 풀 너비로 번쩍이지 않게 하는 안전값이다. `visible`이 `true`가 되는 시점과 `update()`가 실제 `transform`을 계산해 쓰는 시점은 같은 `useEffect` 실행 안에서 벌어지므로, 실제로는 항상 올바른 값이 먼저 그려진다.)
+(초기 `style={{ transform: "scaleX(0)" }}`은 `useEffect`의 첫 `update()` 호출 전에 렌더링될 때(즉 `visible`이 `true`가 된 첫 프레임)에도 바가 풀 너비로 번쩍이지 않게 하는 안전값이다. 다만 이 `scaleX(0)`는 단순한 안전값이 아니라, 페이지가 이미 스크롤된 상태로 로드되는 경우(뒤로가기 스크롤 복원, `#hash` 진입, 새로고침 후 스크롤 위치 복원 등) 실제로 화면에 잠깐 나타나는 상태다 — `visible`을 `true`로 바꾸는 `update()` 실행 시점에는 아직 `barRef.current`가 `null`이라 그때 계산한 진행률이 그대로 버려지기 때문이다. 그래서 컴포넌트는 마지막으로 계산한 진행률을 `progressRef`에 저장해두고, `visible`을 의존성으로 하는 별도의 `useEffect`에서 바가 마운트된 직후 `progressRef.current` 값을 다시 `transform`에 적용해 올바른 값으로 즉시 보정한다.)
 
 - [ ] **Step 2: `app/c/[slug]/page.tsx`에 import 추가**
 
