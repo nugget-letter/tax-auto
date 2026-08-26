@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Noto_Serif_KR, Nanum_Gothic, Nanum_Myeongjo, Gothic_A1 } from "next/font/google";
 import "./globals.css";
+import "@seed-design/css/all.css";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
