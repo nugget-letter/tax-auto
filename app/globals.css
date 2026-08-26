@@ -32,6 +32,17 @@ body {
 .rich-text hr {
   margin: 1.5em 0;
 }
+.rich-text table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 1em;
+}
+.rich-text td,
+.rich-text th {
+  border: 1px solid #d1d5db;
+  padding: 0.5em;
+}
 
 .scroll-reveal {
   transition:
