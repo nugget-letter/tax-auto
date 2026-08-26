@@ -28,7 +28,7 @@ Props 없음(클라이언트 컴포넌트, `window`/`document`의 스크롤 상�
 
 ## 스타일
 
-`position: fixed; top: 0; left: 0; width: 100%; height: 3px`, `transform-origin: left`, 배경색은 고정 짙은 네이비 `#0f172a`(관리자 사이드바의 `navy-950`와 통일). 별도의 옅은 배경 트랙은 두지 않는다 — 진행률만큼 채워지는 바 하나만 존재하며, 스크롤하지 않은 상태에서는 `scaleX(0)`이라 자연히 안 보인다.
+`position: fixed; top: 0; left: 0; width: 100%; height: 3px`, `transform-origin: left`, 배경색은 관리자 사이드바(`components/admin/Sidebar.tsx`)가 쓰는 것과 같은 Tailwind 색상 토큰 `bg-navy-950`(`app/globals.css`에 `--color-navy-950: #0b0b10`로 정의됨)를 그대로 사용한다 — 새 hex 값을 하드코딩하지 않고 기존 토큰과 통일한다. 별도의 옅은 배경 트랙은 두지 않는다 — 진행률만큼 채워지는 바 하나만 존재하며, 스크롤하지 않은 상태에서는 `scaleX(0)`이라 자연히 안 보인다.
 
 ## 에러 처리 & 엣지 케이스
 
