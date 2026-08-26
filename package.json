@@ -9,6 +9,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@seed-design/css": "^2.5.0",
+    "@seed-design/react": "^2.3.0",
     "@supabase/supabase-js": "^2.112.2",
     "@tiptap/extension-highlight": "^3.29.2",
     "@tiptap/extension-text-style": "^3.29.2",
