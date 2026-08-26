@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ActionButton } from "seed-design/ui/action-button";
 import type { PageRecord } from "@/lib/pages/types";
 
 export default function DuplicateButton({ id }: { id: string }) {
@@ -33,14 +34,16 @@ export default function DuplicateButton({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col items-end">
-      <button
+      <ActionButton
         type="button"
+        variant="ghost"
+        size="small"
         onClick={handleClick}
+        loading={loading}
         disabled={loading}
-        className="text-xs text-gray-600 hover:underline disabled:opacity-50"
       >
-        {loading ? "복제 중..." : "복제"}
-      </button>
+        복제
+      </ActionButton>
       {error && <p className="mt-1 text-right text-xs text-red-600">{error}</p>}
     </div>
   );

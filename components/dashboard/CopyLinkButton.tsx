@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ActionButton } from "seed-design/ui/action-button";
 
 export default function CopyLinkButton({ slug }: { slug: string }) {
   const [copied, setCopied] = useState(false);
@@ -13,8 +14,8 @@ export default function CopyLinkButton({ slug }: { slug: string }) {
   }
 
   return (
-    <button type="button" onClick={handleCopy} className="text-xs text-blue-600 hover:underline">
+    <ActionButton type="button" variant="ghost" size="small" onClick={handleCopy}>
       {copied ? "복사됨!" : "URL 복사"}
-    </button>
+    </ActionButton>
   );
 }
