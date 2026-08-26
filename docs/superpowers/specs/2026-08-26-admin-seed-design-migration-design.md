@@ -39,15 +39,19 @@ seed-design은 npm에 실제 배포되어 있다 (`@seed-design/react@2.3.0`, `@
 
 ## 테마 스코핑 (핵심 설계 결정)
 
-seed-design 공식 가이드는 `<html>`에 `data-seed`, `data-seed-color-mode="system"`, `data-seed-user-color-scheme="light"` 속성을 붙이고 `@seed-design/css/all.css`를 앱 전역에 import하는 것을 전제로 한다. 이 프로젝트는 `app/layout.tsx`(루트 레이아웃)가 공개 랜딩페이지(`app/c/[slug]`)와 `/admin`을 모두 감싸므로, 그대로 따르면 seed의 리셋 CSS가 공개 페이지에도 영향을 준다.
+seed-design 공식 가이드는 `<html>`에 `data-seed`, `data-seed-color-mode="system"`, `data-seed-user-color-scheme="light"` 속성을 붙이고 `@seed-design/css/all.css`를 앱 전역에 import하는 것을 전제로 한다. 이 프로젝트는 `app/layout.tsx`(루트 레이아웃)가 공개 랜딩페이지(`app/c/[slug]`)와 `/admin`, `/login`을 모두 감싸므로, 그대로 따르면 seed의 색상 모드가 공개 페이지에도 영향을 줄 수 있다.
 
-**결정:** 루트 레이아웃(`app/layout.tsx`)은 건드리지 않는다. 대신 `app/admin/layout.tsx`에서:
-- `data-seed`, `data-seed-color-mode="light"`, `data-seed-user-color-scheme="light"` 속성을 가진 wrapper `<div>`로 `<Sidebar />`와 `children`을 감싼다 (라이트 모드 고정이므로 시스템 다크모드 감지 스크립트는 필요 없다)
-- `@seed-design/css/all.css`를 이 레이아웃 파일에서만 import한다
+**사전 검증 (브라우저 없이, 실제 배포된 npm 패키지를 받아 확인함):**
+- `@seed-design/css@2.5.0` 패키지의 `all.css`를 직접 받아 열어본 결과, 색상 토큰(`--seed-color-fg-*` 등)을 정의하는 선택자는 `:root`에 고정되어 있지 않고 `[data-seed-color-mode="light-only"]` 같은 일반 속성 선택자다 — 즉 `<html>`이 아닌 하위 `<div>`에 붙여도 그 서브트리에서 정상적으로 값이 재정의된다.
+- `base.css`/`all.css`에는 `html`, `body`, `button`, `input`, `*` 같은 전역 요소 리셋이 전혀 없다 — 즉 이 스타일시트를 어디서 import하든(심지어 루트 레이아웃이라도) 참조하지 않는 기존 Tailwind 마크업에는 아무 영향이 없다.
 
-**검증 필요 사항 (구현 착수 시 가장 먼저 확인):** seed-design의 CSS 커스텀 프로퍼티가 `[data-seed]` 속성 선택자로 스코핑되어 있어서 `<html>`이 아닌 하위 `<div>`에도 정상 적용되는지 확인한다.
-- **된다면:** 위 설계대로 진행.
-- **안 된다면** (예: `:root[data-seed]`처럼 루트에 고정된 선택자라면): `data-seed*` 속성을 `app/layout.tsx`의 `<html>`로 옮기고, `@seed-design/css/all.css`의 리셋 규칙이 공개 랜딩페이지(`app/c/[slug]`, `app/page.tsx`)의 기존 스타일과 충돌하지 않는지 별도로 브라우저에서 확인하는 단계를 추가한다.
+**결정:**
+- **CSS import는 루트 레이아웃(`app/layout.tsx`)에서 한다** (이미 `globals.css`를 import하는 곳과 같은 위치). 전역 리셋이 없다는 걸 확인했으므로 안전하고, 이렇게 해야 `/login`(admin 레이아웃 밖에 있는 별도 라우트)의 seed 컴포넌트에도 스타일이 적용된다.
+- **`data-seed`, `data-seed-color-mode="light-only"` 속성은 실제로 seed 컴포넌트를 쓰는 곳에만 국한한다:**
+  - `app/admin/layout.tsx`에서 `<Sidebar />`와 `children`을 감싸는 wrapper `<div>`
+  - `app/login/page.tsx`의 최상위 wrapper
+  - `data-seed-user-color-scheme`이나 다크모드 감지 스크립트는 필요 없다 — `light-only` 값 자체가 시스템 설정과 무관하게 라이트 모드로 고정한다.
+- 공개 랜딩페이지(`app/c/[slug]`, `app/page.tsx`)에는 이 속성을 붙이지 않는다 — CSS는 전역에 로드되어 있지만 값을 참조하는 요소가 없으므로 시각적 영향이 없다.
 
 ## 컴포넌트 매핑
 
