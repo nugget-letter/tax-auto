@@ -3,7 +3,9 @@ import type { PageRecord, PageStatus } from "@/lib/pages/types";
 import { formatDate } from "@/lib/format";
 import StatusBadge from "./StatusBadge";
 import CopyLinkButton from "./CopyLinkButton";
+import DuplicateButton from "./DuplicateButton";
 import StatusActionButton from "./StatusActionButton";
+import DeleteButton from "./DeleteButton";
 
 const GROUPS: { status: PageStatus; heading: string }[] = [
   { status: "published", heading: "발행됨" },
@@ -28,7 +30,9 @@ function PageRow({ page }: { page: PageRecord }) {
         <Link href={`/admin/${page.id}/edit`} className="text-xs text-gray-600 hover:underline">
           수정
         </Link>
+        <DuplicateButton id={page.id} />
         <StatusActionButton id={page.id} status={page.status} />
+        <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
       </div>
     </li>
   );
