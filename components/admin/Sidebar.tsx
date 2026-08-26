@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ActionButton } from "seed-design/ui/action-button";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "대시보드" },
@@ -40,12 +41,9 @@ export default function Sidebar() {
         </nav>
       </div>
       <form action="/api/logout" method="POST" className="p-3">
-        <button
-          type="submit"
-          className="w-full rounded px-3 py-2 text-left text-sm text-gray-400 hover:bg-white/5 hover:text-white"
-        >
+        <ActionButton type="submit" variant="ghost" size="small" color="fg.neutralInverted">
           로그아웃
-        </button>
+        </ActionButton>
       </form>
     </aside>
   );
