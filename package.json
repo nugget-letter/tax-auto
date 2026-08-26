@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@karrotmarket/react-monochrome-icon": "^1.26.0",
     "@seed-design/css": "^2.5.0",
     "@seed-design/react": "^2.3.0",
     "@supabase/supabase-js": "^2.112.2",
