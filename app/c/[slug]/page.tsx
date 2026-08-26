@@ -7,6 +7,7 @@ import BannerBlock from "@/components/public/BannerBlock";
 import TextBlock from "@/components/public/TextBlock";
 import CtaButton from "@/components/public/CtaButton";
 import PreviewBanner from "@/components/public/PreviewBanner";
+import ReadingProgressBar from "@/components/public/ReadingProgressBar";
 import DividerBlock from "@/components/public/DividerBlock";
 import ScrollReveal from "@/components/public/ScrollReveal";
 
@@ -52,6 +53,7 @@ export default async function PublicPage({
   return (
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
+      {page.status === "published" && <ReadingProgressBar />}
       <div className="overflow-x-clip">
         {(() => {
           const AUTO_BORDER_TYPES = ["banner", "text", "cta"];
