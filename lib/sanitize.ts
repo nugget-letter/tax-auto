@@ -4,7 +4,7 @@ import type { PageInput } from "./pages/types";
 // isomorphic-dompurify(jsdom 기반)는 Vercel 서버리스 번들에서
 // "require() of ES Module ... not supported" 크래시가 나서(로컬 next dev/build에서는
 // 우연히 재현되지 않았다) htmlparser2 기반의 sanitize-html로 교체했다 — jsdom 의존성이 없다.
-const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark", "hr", "table", "colgroup", "col", "tbody", "tr", "td"];
+const ALLOWED_TAGS = ["p", "br", "strong", "em", "u", "s", "span", "mark", "hr", "table", "colgroup", "col", "tbody", "tr", "td", "th"];
 
 const COLOR_PATTERNS = [
   /^#[0-9a-fA-F]{3,8}$/,
@@ -18,6 +18,7 @@ export function sanitizeBodyHtml(html: string): string {
     allowedAttributes: {
       "*": ["style"],
       td: ["colspan", "rowspan"],
+      th: ["colspan", "rowspan"],
     },
     // 리치 에디터(components/editor/RichTextEditor.tsx)가 실제로 생성하는 인라인
     // 스타일만 허용한다 — 굵게/기울임/밑줄/취소선/강조는 태그 자체로 표현되고,

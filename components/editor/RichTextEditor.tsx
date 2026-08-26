@@ -70,6 +70,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
     ],
     content: value,
     immediatelyRender: false,
+    shouldRerenderOnTransaction: true,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
