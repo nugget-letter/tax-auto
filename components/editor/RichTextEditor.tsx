@@ -7,6 +7,7 @@ import Highlight from "@tiptap/extension-highlight";
 import { LetterSpacing } from "@/lib/tiptap/letterSpacing";
 import { TextAlign } from "@/lib/tiptap/textAlign";
 import { DividerNode } from "@/lib/tiptap/dividerNode";
+import { TableKit } from "@tiptap/extension-table";
 import { DIVIDER_STYLE_PRESETS } from "@/lib/pages/dividerStyle";
 import type { DividerStyle } from "@/lib/pages/types";
 
@@ -64,6 +65,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
       TextAlign,
       Highlight,
       DividerNode,
+      TableKit.configure({ table: { resizable: false } }),
     ],
     content: value,
     immediatelyRender: false,
