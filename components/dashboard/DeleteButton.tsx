@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Text } from "@seed-design/react";
+import { ActionButton } from "seed-design/ui/action-button";
 
 type Props = { id: string; title: string; slug: string; publishedAt: string | null };
 
@@ -39,15 +41,22 @@ export default function DeleteButton({ id, title, slug, publishedAt }: Props) {
 
   return (
     <div className="flex flex-col items-end">
-      <button
+      <ActionButton
         type="button"
+        variant="ghost"
+        size="xsmall"
+        color="fg.critical"
         onClick={handleClick}
+        loading={loading}
         disabled={loading}
-        className="text-xs text-red-600 hover:underline disabled:opacity-50"
       >
-        {loading ? "삭제 중..." : "삭제"}
-      </button>
-      {error && <p className="mt-1 text-right text-xs text-red-600">{error}</p>}
+        삭제
+      </ActionButton>
+      {error && (
+        <Text as="p" textStyle="t2Regular" color="fg.critical" className="mt-1 text-right">
+          {error}
+        </Text>
+      )}
     </div>
   );
 }

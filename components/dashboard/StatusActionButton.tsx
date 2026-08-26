@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Text } from "@seed-design/react";
+import { ActionButton } from "seed-design/ui/action-button";
 import type { PageStatus } from "@/lib/pages/types";
 
 type Props = { id: string; status: PageStatus };
@@ -44,15 +46,22 @@ export default function StatusActionButton({ id, status }: Props) {
 
   return (
     <div className="flex flex-col items-end">
-      <button
+      <ActionButton
         type="button"
+        variant="ghost"
+        size="xsmall"
+        color="fg.informative"
         onClick={handleClick}
+        loading={loading}
         disabled={loading}
-        className="text-xs text-blue-600 hover:underline disabled:opacity-50"
       >
-        {loading ? "처리 중..." : next.label}
-      </button>
-      {error && <p className="mt-1 text-right text-xs text-red-600">{error}</p>}
+        {next.label}
+      </ActionButton>
+      {error && (
+        <Text as="p" textStyle="t2Regular" color="fg.critical" className="mt-1 text-right">
+          {error}
+        </Text>
+      )}
     </div>
   );
 }

@@ -25,6 +25,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "seed-design/*": [
+        "./seed-design/*"
       ]
     }
   },
