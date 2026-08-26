@@ -3,15 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Props = { id: string; title: string };
+type Props = { id: string; title: string; slug: string; publishedAt: string | null };
 
-export default function DeleteButton({ id, title }: Props) {
+export default function DeleteButton({ id, title, slug, publishedAt }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleClick() {
-    const confirmed = window.confirm(`"${title}" 페이지를 삭제할까요? 되돌릴 수 없어요.`);
+    const confirmMessage =
+      publishedAt !== null
+        ? `"${title}" 페이지를 삭제할까요? 이미 배포한 /c/${slug} 링크가 동작하지 않게 되고 발행 기록도 사라져요. 되돌릴 수 없어요.`
+        : `"${title}" 페이지를 삭제할까요? 되돌릴 수 없어요.`;
+    const confirmed = window.confirm(confirmMessage);
     if (!confirmed) return;
 
     setLoading(true);

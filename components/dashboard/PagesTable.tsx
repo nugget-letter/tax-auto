@@ -32,7 +32,7 @@ function PageRow({ page }: { page: PageRecord }) {
         </Link>
         <DuplicateButton id={page.id} />
         <StatusActionButton id={page.id} status={page.status} />
-        <DeleteButton id={page.id} title={page.title} />
+        <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
       </div>
     </li>
   );
