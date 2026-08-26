@@ -10,6 +10,7 @@ import { DividerNode } from "@/lib/tiptap/dividerNode";
 import { TableKit } from "@tiptap/extension-table";
 import { DIVIDER_STYLE_PRESETS } from "@/lib/pages/dividerStyle";
 import type { DividerStyle } from "@/lib/pages/types";
+import TableToolbarControls from "./TableToolbarControls";
 
 const FONT_SIZES = ["14px", "16px", "20px", "24px"];
 
@@ -234,6 +235,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
             </option>
           ))}
         </select>
+        <TableToolbarControls editor={editor} />
       </div>
       <EditorContent editor={editor} className="rich-text p-3 text-sm" />
     </div>
