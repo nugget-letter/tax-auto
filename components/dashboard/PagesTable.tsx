@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Box, HStack, Text, VStack } from "@seed-design/react";
 import type { PageRecord, PageStatus } from "@/lib/pages/types";
 import { formatDate } from "@/lib/format";
 import StatusBadge from "./StatusBadge";
@@ -13,19 +14,29 @@ const GROUPS: { status: PageStatus; heading: string }[] = [
   { status: "archived", heading: "보관" },
 ];
 
-function PageRow({ page }: { page: PageRecord }) {
+function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
   return (
-    <li className="flex items-center justify-between gap-4 p-4">
-      <div>
-        <div className="flex items-center gap-2">
+    <HStack
+      align="center"
+      justify="space-between"
+      gap="x4"
+      px="x4"
+      py="x4"
+      borderBottomWidth={isLast ? 0 : 1}
+      borderColor="stroke.neutralWeak"
+    >
+      <Box minWidth="0" flexGrow={1}>
+        <HStack align="center" gap="x2" minWidth="0">
           <StatusBadge status={page.status} />
-          <span className="text-sm font-medium text-gray-900">{page.title}</span>
-        </div>
-        <p className="mt-1 text-xs text-gray-400">
+          <Text as="span" textStyle="t7Bold" color="fg.neutral" maxLines={1}>
+            {page.title}
+          </Text>
+        </HStack>
+        <Text as="p" textStyle="t10Regular" color="fg.neutralSubtle" className="mt-1">
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
-        </p>
-      </div>
-      <div className="flex shrink-0 items-center gap-3">
+        </Text>
+      </Box>
+      <HStack flexShrink={0} align="center" gap="x3">
         <CopyLinkButton slug={page.slug} />
         <Link href={`/admin/${page.id}/edit`} className="text-xs text-gray-600 hover:underline">
           수정
@@ -33,35 +44,39 @@ function PageRow({ page }: { page: PageRecord }) {
         <DuplicateButton id={page.id} />
         <StatusActionButton id={page.id} status={page.status} />
         <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
-      </div>
-    </li>
+      </HStack>
+    </HStack>
   );
 }
 
 export default function PagesTable({ pages }: { pages: PageRecord[] }) {
   if (pages.length === 0) {
-    return <p className="text-sm text-gray-500">아직 생성된 페이지가 없어요.</p>;
+    return (
+      <Text as="p" textStyle="t9Regular" color="fg.neutralSubtle">
+        아직 생성된 페이지가 없어요.
+      </Text>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <VStack gap="x6">
       {GROUPS.map(({ status, heading }) => {
         const groupPages = pages.filter((page) => page.status === status);
         if (groupPages.length === 0) return null;
 
         return (
-          <section key={status}>
-            <h2 className="mb-2 text-xs font-semibold tracking-wide text-gray-400">
+          <Box key={status}>
+            <Text as="p" textStyle="t11Bold" color="fg.neutralSubtle" className="mb-2">
               {heading} ({groupPages.length})
-            </h2>
-            <ul className="divide-y divide-gray-100 rounded border border-gray-200">
-              {groupPages.map((page) => (
-                <PageRow key={page.id} page={page} />
+            </Text>
+            <Box borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
+              {groupPages.map((page, index) => (
+                <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
               ))}
-            </ul>
-          </section>
+            </Box>
+          </Box>
         );
       })}
-    </div>
+    </VStack>
   );
 }

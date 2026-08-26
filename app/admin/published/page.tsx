@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { Box, HStack, Text, VStack } from "@seed-design/react";
 import { listPages } from "@/lib/pages/repository";
 import { formatDate } from "@/lib/format";
 import CopyLinkButton from "@/components/dashboard/CopyLinkButton";
@@ -30,30 +31,45 @@ export default async function PublishedUrlsPage() {
       </p>
 
       {everPublished.length === 0 ? (
-        <p className="mt-6 text-sm text-gray-500">아직 발행된 페이지가 없어요.</p>
+        <Text as="p" textStyle="t9Regular" color="fg.neutralSubtle" className="mt-6">
+          아직 발행된 페이지가 없어요.
+        </Text>
       ) : (
-        <ul className="mt-6 divide-y divide-gray-100 rounded border border-gray-200">
-          {everPublished.map((page) => (
-            <li key={page.id} className="flex items-center justify-between gap-4 p-4">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <StatusBadge status={page.status} />
-                  <p className="text-sm font-medium text-gray-900">{page.title}</p>
-                </div>
-                <p className="mt-1 text-xs text-gray-400">
-                  발행일 {formatDate(page.publishedAt!)}
-                </p>
-                <input
-                  type="text"
-                  readOnly
-                  value={`${origin}/c/${page.slug}`}
-                  className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-600"
-                />
-              </div>
-              <CopyLinkButton slug={page.slug} />
-            </li>
-          ))}
-        </ul>
+        <Box borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2" marginTop="x6">
+          <VStack gap={0}>
+            {everPublished.map((page, index) => (
+              <HStack
+                key={page.id}
+                align="center"
+                justify="space-between"
+                gap="x4"
+                px="x4"
+                py="x4"
+                borderBottomWidth={index === everPublished.length - 1 ? 0 : 1}
+                borderColor="stroke.neutralWeak"
+              >
+                <Box minWidth="0" flexGrow={1}>
+                  <HStack align="center" gap="x2" minWidth="0">
+                    <StatusBadge status={page.status} />
+                    <Text as="p" textStyle="t7Bold" color="fg.neutral" maxLines={1}>
+                      {page.title}
+                    </Text>
+                  </HStack>
+                  <Text as="p" textStyle="t10Regular" color="fg.neutralSubtle" className="mt-1">
+                    발행일 {formatDate(page.publishedAt!)}
+                  </Text>
+                  <input
+                    type="text"
+                    readOnly
+                    value={`${origin}/c/${page.slug}`}
+                    className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-600"
+                  />
+                </Box>
+                <CopyLinkButton slug={page.slug} />
+              </HStack>
+            ))}
+          </VStack>
+        </Box>
       )}
     </div>
   );
