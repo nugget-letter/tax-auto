@@ -14,7 +14,14 @@ export default function CopyLinkButton({ slug }: { slug: string }) {
   }
 
   return (
-    <ActionButton type="button" variant="ghost" size="small" onClick={handleCopy}>
+    <ActionButton
+      type="button"
+      variant="ghost"
+      size="xsmall"
+      fontWeight="medium"
+      color="fg.neutralSubtle"
+      onClick={handleCopy}
+    >
       {copied ? "복사됨!" : "URL 복사"}
     </ActionButton>
   );

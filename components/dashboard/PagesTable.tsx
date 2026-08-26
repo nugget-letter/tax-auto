@@ -38,14 +38,25 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
         </Text>
       </Box>
-      <HStack flexShrink={0} align="center" gap="x3">
-        <CopyLinkButton slug={page.slug} />
-        <ActionButton asChild variant="ghost" size="small">
-          <Link href={`/admin/${page.id}/edit`}>수정</Link>
-        </ActionButton>
-        <DuplicateButton id={page.id} />
-        <StatusActionButton id={page.id} status={page.status} />
-        <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
+      <HStack flexShrink={0} align="center" gap="x2">
+        <HStack align="center" gap="x1">
+          <CopyLinkButton slug={page.slug} />
+          <ActionButton
+            asChild
+            variant="ghost"
+            size="xsmall"
+            fontWeight="medium"
+            color="fg.neutralSubtle"
+          >
+            <Link href={`/admin/${page.id}/edit`}>수정</Link>
+          </ActionButton>
+          <DuplicateButton id={page.id} />
+        </HStack>
+        <Box borderLeftWidth={1} borderColor="stroke.neutralWeak" height="x4" />
+        <HStack align="center" gap="x1">
+          <StatusActionButton id={page.id} status={page.status} />
+          <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
+        </HStack>
       </HStack>
     </HStack>
   );

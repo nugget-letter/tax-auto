@@ -44,7 +44,7 @@ export default function DeleteButton({ id, title, slug, publishedAt }: Props) {
       <ActionButton
         type="button"
         variant="ghost"
-        size="small"
+        size="xsmall"
         color="fg.critical"
         onClick={handleClick}
         loading={loading}

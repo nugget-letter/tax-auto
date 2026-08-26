@@ -49,7 +49,7 @@ export default function StatusActionButton({ id, status }: Props) {
       <ActionButton
         type="button"
         variant="ghost"
-        size="small"
+        size="xsmall"
         color="fg.informative"
         onClick={handleClick}
         loading={loading}

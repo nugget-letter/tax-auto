@@ -38,7 +38,9 @@ export default function DuplicateButton({ id }: { id: string }) {
       <ActionButton
         type="button"
         variant="ghost"
-        size="small"
+        size="xsmall"
+        fontWeight="medium"
+        color="fg.neutralSubtle"
         onClick={handleClick}
         loading={loading}
         disabled={loading}
