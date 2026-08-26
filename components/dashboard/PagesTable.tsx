@@ -5,6 +5,7 @@ import StatusBadge from "./StatusBadge";
 import CopyLinkButton from "./CopyLinkButton";
 import DuplicateButton from "./DuplicateButton";
 import StatusActionButton from "./StatusActionButton";
+import DeleteButton from "./DeleteButton";
 
 const GROUPS: { status: PageStatus; heading: string }[] = [
   { status: "published", heading: "발행됨" },
@@ -31,6 +32,7 @@ function PageRow({ page }: { page: PageRecord }) {
         </Link>
         <DuplicateButton id={page.id} />
         <StatusActionButton id={page.id} status={page.status} />
+        <DeleteButton id={page.id} title={page.title} />
       </div>
     </li>
   );
