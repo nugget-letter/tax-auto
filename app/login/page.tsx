@@ -26,7 +26,7 @@ export default async function LoginPage({
           invalid={Boolean(params.error)}
           errorMessage={params.error ? "비밀번호가 올바르지 않아요." : undefined}
         >
-          <TextFieldInput type="password" name="password" placeholder="비밀번호" autoFocus />
+          <TextFieldInput type="password" name="password" autoFocus />
         </TextField>
         <ActionButton type="submit" variant="neutralSolid">
           로그인

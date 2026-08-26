@@ -1,5 +1,5 @@
 {
-  "rsc": false,
+  "rsc": true,
   "tsx": true,
   "framework": "react",
   "path": "./seed-design",

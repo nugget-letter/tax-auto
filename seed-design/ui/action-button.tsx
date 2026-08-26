@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file ui:action-button
  * @requires @seed-design/react@^2.0.0

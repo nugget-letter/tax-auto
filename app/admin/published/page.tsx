@@ -36,10 +36,11 @@ export default async function PublishedUrlsPage() {
         </Text>
       ) : (
         <Box borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2" marginTop="x6">
-          <VStack gap={0}>
+          <VStack as="ul" gap={0}>
             {everPublished.map((page, index) => (
               <HStack
                 key={page.id}
+                as="li"
                 align="center"
                 justify="space-between"
                 gap="x4"

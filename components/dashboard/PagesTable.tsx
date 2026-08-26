@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Box, HStack, Text, VStack } from "@seed-design/react";
+import { ActionButton } from "seed-design/ui/action-button";
 import type { PageRecord, PageStatus } from "@/lib/pages/types";
 import { formatDate } from "@/lib/format";
 import StatusBadge from "./StatusBadge";
@@ -17,6 +18,7 @@ const GROUPS: { status: PageStatus; heading: string }[] = [
 function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
   return (
     <HStack
+      as="li"
       align="center"
       justify="space-between"
       gap="x4"
@@ -38,9 +40,9 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
       </Box>
       <HStack flexShrink={0} align="center" gap="x3">
         <CopyLinkButton slug={page.slug} />
-        <Link href={`/admin/${page.id}/edit`} className="text-xs text-gray-600 hover:underline">
-          수정
-        </Link>
+        <ActionButton asChild variant="ghost" size="small">
+          <Link href={`/admin/${page.id}/edit`}>수정</Link>
+        </ActionButton>
         <DuplicateButton id={page.id} />
         <StatusActionButton id={page.id} status={page.status} />
         <DeleteButton id={page.id} title={page.title} slug={page.slug} publishedAt={page.publishedAt} />
@@ -66,10 +68,10 @@ export default function PagesTable({ pages }: { pages: PageRecord[] }) {
 
         return (
           <Box key={status}>
-            <Text as="p" textStyle="t11Bold" color="fg.neutralSubtle" className="mb-2">
+            <Text as="h2" textStyle="t11Bold" color="fg.neutralSubtle" className="mb-2">
               {heading} ({groupPages.length})
             </Text>
-            <Box borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
+            <Box as="ul" borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
               {groupPages.map((page, index) => (
                 <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
               ))}
