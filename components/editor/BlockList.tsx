@@ -5,6 +5,7 @@ import {
   DndContext,
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -62,7 +63,7 @@ export default function BlockList({ blocks, onChange }: Props) {
 
   return (
     <div className="space-y-4">
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <DndContext id="block-list" sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={blocks.map((b) => b._key)} strategy={verticalListSortingStrategy}>
           {blocks.map((block, index) => (
             <SortableBlockItem
