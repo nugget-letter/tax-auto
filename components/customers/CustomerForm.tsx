@@ -113,8 +113,13 @@ export default function CustomerForm(props: Props) {
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold text-gray-900">{initial ? initial.name : "고객 추가"}</h1>
-          {initial && <CustomerStatusBadge status={initial.status} />}
+          {/* initial은 서버에서 불러온 원본 스냅샷이라 저장 전에는 갱신되지 않는다.
+              제목/뱃지는 옆의 이름 입력·상태 select와 같은 화면을 보고 있다는
+              인상을 줘야 하므로 화면에 반영 중인 form 값을 따라가게 한다. */}
+          <h1 className="text-xl font-bold text-gray-900">
+            {initial ? form.name.trim() || "이름 없음" : "고객 추가"}
+          </h1>
+          {initial && <CustomerStatusBadge status={form.status} />}
         </div>
         <div className="flex items-center gap-3">
           <select
