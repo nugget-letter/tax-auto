@@ -31,9 +31,16 @@ async function main() {
   const currentYear = new Date().getFullYear();
   const rows: ImportRow[] = [];
   let skipped = 0;
+  // 완전히 빈 행(시트 내보내기 시 흔히 섞여 들어옴)은 "이름/연락처 없어 건너뜀"과
+  // 다른 원인이라 별도 카운트로 분리한다 — 안 그러면 읽은 행 수가 임포트 대상 +
+  // 건너뜀 합계와 안 맞아 보여서 헷갈린다.
+  let blank = 0;
 
   body.forEach((cells, i) => {
-    if (cells.every((c) => c.trim() === "")) return;
+    if (cells.every((c) => c.trim() === "")) {
+      blank++;
+      return;
+    }
     const { row, warnings } = mapSheetRow(header, cells, nowIso, currentYear);
     for (const w of warnings) console.warn(`[행 ${i + 2}] ${w}`);
     if (row) {
@@ -43,7 +50,9 @@ async function main() {
     }
   });
 
-  console.log(`\n읽은 행: ${body.length}, 임포트 대상: ${rows.length}, 건너뜀: ${skipped}`);
+  console.log(
+    `\n읽은 행: ${body.length}, 임포트 대상: ${rows.length}, 건너뜀: ${skipped}, 공백 행: ${blank}`
+  );
 
   const statusCounts = rows.reduce<Record<string, number>>((acc, r) => {
     acc[r.status] = (acc[r.status] ?? 0) + 1;

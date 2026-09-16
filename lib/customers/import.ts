@@ -150,12 +150,14 @@ export function mapSheetRow(
 ): ImportResult {
   const byKey: Partial<Record<ColumnKey, string>> = {};
   const labelByKey: Partial<Record<ColumnKey, string>> = {};
+  const columnIndexByKey: Partial<Record<ColumnKey, number>> = {};
   header.forEach((rawLabel, i) => {
     const label = rawLabel.trim() as keyof typeof COLUMN_KEYS;
     const key = COLUMN_KEYS[label];
     if (key) {
       byKey[key] = (cells[i] ?? "").trim();
       labelByKey[key] = label;
+      columnIndexByKey[key] = i;
     }
   });
 
@@ -166,23 +168,20 @@ export function mapSheetRow(
     return { row: null, warnings: [`이름(${name || "없음"}) 또는 연락처(${phone || "없음"})가 비어 건너뜀`] };
   }
 
-  const memoLines: string[] = [];
-
   // 실제 시트의 체험/카카오/리마인드 칼럼은 "이탈", "o", "x", "답변 왔음"처럼
   // 날짜가 아닌 자유 텍스트를 담고 있는 경우가 흔하다. 이런 값은 필드는 비우고
-  // 원본을 메모에 남긴다(경고는 내지 않는다 — 예상된 입력이라서). 다만
+  // 원본을 메모 후보로 돌려준다(경고는 내지 않는다 — 예상된 입력이라서). 다만
   // "2026-13-45"처럼 날짜 형식처럼 보이는데 값이 잘못된 경우는 시트 작성 실수일
   // 가능성이 커서 경고는 그대로 남긴다.
-  function dateField(key: DateColumnKey): string | null {
+  function dateField(key: DateColumnKey): { value: string | null; memoLine: string | null } {
     const raw = byKey[key] ?? "";
-    if (!raw) return null;
+    if (!raw) return { value: null, memoLine: null };
     const parsed = parseSheetDate(raw, currentYear);
-    if (parsed) return parsed;
+    if (parsed) return { value: parsed, memoLine: null };
     if (extractYmd(raw, currentYear)) {
       warnings.push(`${name}: "${labelByKey[key]}" 값 "${raw}"을(를) 날짜로 읽지 못해 비움`);
     }
-    memoLines.push(`${labelByKey[key]}: ${raw}`);
-    return null;
+    return { value: null, memoLine: `${labelByKey[key]}: ${raw}` };
   }
 
   let submittedAt = parseSheetDateTime(byKey.submittedAt ?? "", currentYear);
@@ -192,19 +191,34 @@ export function mapSheetRow(
   }
 
   const trialRaw = byKey.trialStartedOn ?? "";
-  const trialStartedOn = dateField("trialStartedOn");
-  const kakaoAdminSetOn = dateField("kakaoAdminSetOn");
-  const reminded1On = dateField("reminded1On");
-  const reminded2On = dateField("reminded2On");
+  const trial = dateField("trialStartedOn");
+  const kakao = dateField("kakaoAdminSetOn");
+  const reminded1 = dateField("reminded1On");
+  const reminded2 = dateField("reminded2On");
+
+  // 메모 줄 순서는 호출 순서가 아니라 헤더에서 실제 칼럼이 놓인 위치로 정한다.
+  // 시트가 재수출되며 칼럼 순서가 바뀌어도 메모가 여전히 칼럼 순서를 따르게 하기 위해서다.
+  const dateFields: { key: DateColumnKey; result: { value: string | null; memoLine: string | null } }[] = [
+    { key: "trialStartedOn", result: trial },
+    { key: "kakaoAdminSetOn", result: kakao },
+    { key: "reminded1On", result: reminded1 },
+    { key: "reminded2On", result: reminded2 },
+  ];
+  const memoLines = dateFields
+    .slice()
+    .sort((a, b) => (columnIndexByKey[a.key] ?? 0) - (columnIndexByKey[b.key] ?? 0))
+    .map((f) => f.result.memoLine)
+    .filter((line): line is string => line !== null);
 
   // 헤더보다 뒤에 붙은 이름 없는 칼럼(시트에 수동으로 덧붙인 내용)은 그대로 메모 줄로 추가한다.
+  // 다른 메모 값들과 마찬가지로 앞뒤 공백은 정리한다.
   for (let i = header.length; i < cells.length; i++) {
-    const extra = cells[i] ?? "";
-    if (extra.trim() !== "") memoLines.push(extra);
+    const extra = (cells[i] ?? "").trim();
+    if (extra !== "") memoLines.push(extra);
   }
 
   // 상태 우선순위: 이탈 표시 > 체험 시작일 있음 > 신규.
-  const status = trialRaw === "이탈" ? "churned" : trialStartedOn ? "trial" : "new";
+  const status = trialRaw === "이탈" ? "churned" : trial.value ? "trial" : "new";
 
   return {
     row: {
@@ -217,10 +231,10 @@ export function mapSheetRow(
       source: byKey.source || "Google Form",
       sourcePageId: null,
       status,
-      trialStartedOn,
-      kakaoAdminSetOn,
-      reminded1On,
-      reminded2On,
+      trialStartedOn: trial.value,
+      kakaoAdminSetOn: kakao.value,
+      reminded1On: reminded1.value,
+      reminded2On: reminded2.value,
       memo: memoLines.join("\n"),
     },
     warnings,

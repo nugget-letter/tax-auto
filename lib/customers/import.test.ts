@@ -18,6 +18,16 @@ describe("parseCsv", () => {
       ["1", "2"],
     ]);
   });
+  // 시트를 내보낼 때 중간에 빈 줄이 섞이는 경우가 있다. 빈 줄은 셀이 하나뿐인
+  // 행(공백 문자열 한 칸)으로 파싱되며, 그 자체로 유효한 데이터 행이 되지 않는다
+  // (mapSheetRow에 넘기면 이름/연락처가 비어 있어 건너뛰게 된다).
+  it("빈 줄은 빈 문자열 한 칸짜리 행이 된다", () => {
+    expect(parseCsv("a,b\n\n1,2\n")).toEqual([
+      ["a", "b"],
+      [""],
+      ["1", "2"],
+    ]);
+  });
 });
 
 describe("parseSheetDate", () => {
@@ -151,6 +161,35 @@ describe("mapSheetRow", () => {
     expect(mapSheetRow(header, ["", "박", "", "", "", "", "", "", "", "", ""], now, 2026).row).toBeNull();
   });
 
+  // parseCsv는 빈 줄을 [""] (셀 하나짜리 행)로 돌려준다. 그 모양 그대로 넘어와도
+  // 이름/연락처가 비어 있으니 정상 스킵 경로(row null)를 타지, 엉뚱한 고객 행으로
+  // 만들어지지 않아야 한다.
+  it("완전히 빈 행([\"\"])은 임포트 대상이 되지 않는다", () => {
+    const { row, warnings } = mapSheetRow(header, [""], now, 2026);
+    expect(row).toBeNull();
+    expect(warnings).toEqual(["이름(없음) 또는 연락처(없음)가 비어 건너뜀"]);
+  });
+
+  // 시트 마지막 칼럼들이 비어 있으면 내보내기 결과 CSV 행 자체가 헤더보다 짧게
+  // 끊기기도 한다. cells[i] ?? ""로 방어했는지 잠근다.
+  it("데이터 행이 헤더보다 짧아도 뒤쪽 칼럼은 빈 값으로 처리된다", () => {
+    const cells = ["2026. 9. 1", "박회계", "", "010-1"];
+    const { row, warnings } = mapSheetRow(header, cells, now, 2026);
+    expect(warnings).toEqual([]);
+    expect(row).toMatchObject({
+      name: "박회계",
+      email: "",
+      consented: false,
+      source: "Google Form",
+      status: "new",
+      trialStartedOn: null,
+      kakaoAdminSetOn: null,
+      reminded1On: null,
+      reminded2On: null,
+      memo: "",
+    });
+  });
+
   it("헤더 앞뒤 공백 무시", () => {
     const spaced = header.map((h) => ` ${h} `);
     const { row } = mapSheetRow(spaced, ["", "박", "", "010-1", "", "", "", "", "", "", ""], now, 2026);
@@ -175,7 +214,7 @@ describe("mapSheetRow", () => {
     expect(warnings).toEqual([]);
   });
 
-  it("헤더보다 뒤에 있는 이름 없는 칼럼은 메모에 그대로 추가된다", () => {
+  it("헤더보다 뒤에 있는 이름 없는 칼럼은 메모에 그대로 추가된다(앞뒤 공백은 정리)", () => {
     const cells = [
       "2026. 9. 1",
       "박회계",
@@ -188,7 +227,7 @@ describe("mapSheetRow", () => {
       "",
       "",
       "",
-      "추가 메모입니다",
+      "  추가 메모입니다  ",
     ];
     const { row } = mapSheetRow(header, cells, now, 2026);
     expect(row?.memo).toBe("추가 메모입니다");
@@ -211,5 +250,43 @@ describe("mapSheetRow", () => {
     const { row } = mapSheetRow(header, cells, now, 2026);
     expect(row?.status).toBe("churned");
     expect(row?.memo).toBe("한 달 무료 체험 시작일: 이탈\n카카오 관리자 설정: 답변 왔음\n리마인드 2차: 문의함");
+  });
+
+  // 메모 줄 순서가 dateField() 호출 순서(체험→카카오→리마인드1→리마인드2)가 아니라
+  // 실제 헤더 상의 칼럼 위치를 따르는지 확인한다. 시트가 재수출되며 칼럼 순서가
+  // 바뀌어도(여기서는 카카오 칼럼을 체험 칼럼보다 앞으로 옮김) 메모는 새 헤더 순서를
+  // 그대로 반영해야 한다.
+  it("헤더 칼럼 순서가 바뀌면 메모 줄도 바뀐 순서를 따른다", () => {
+    const reordered = [
+      "접수시각",
+      "이름",
+      "사무실",
+      "연락처",
+      "이메일",
+      "동의",
+      "유입경로",
+      "카카오 관리자 설정", // 원래 순서보다 앞으로 옮김
+      "한 달 무료 체험 시작일",
+      "리마인드 1차",
+      "리마인드 2차",
+    ];
+    const cells = [
+      "2026. 9. 1",
+      "박회계",
+      "",
+      "010-1",
+      "",
+      "",
+      "",
+      "답변 왔음", // 카카오 관리자 설정 (인덱스 7)
+      "이탈", // 한 달 무료 체험 시작일 (인덱스 8)
+      "",
+      "문의함", // 리마인드 2차 (인덱스 10)
+    ];
+    const { row } = mapSheetRow(reordered, cells, now, 2026);
+    expect(row?.status).toBe("churned");
+    // 호출 순서대로였다면 "체험→카카오→리마인드2"였겠지만, 헤더 순서를 따르므로
+    // "카카오→체험→리마인드2"가 된다.
+    expect(row?.memo).toBe("카카오 관리자 설정: 답변 왔음\n한 달 무료 체험 시작일: 이탈\n리마인드 2차: 문의함");
   });
 });
