@@ -10,6 +10,7 @@ import PreviewBanner from "@/components/public/PreviewBanner";
 import ReadingProgressBar from "@/components/public/ReadingProgressBar";
 import DividerBlock from "@/components/public/DividerBlock";
 import ScrollReveal from "@/components/public/ScrollReveal";
+import FormBlock from "@/components/public/FormBlock";
 
 export const dynamic = "force-dynamic";
 
@@ -56,8 +57,8 @@ export default async function PublicPage({
       {page.status === "published" && <ReadingProgressBar />}
       <div className="overflow-x-clip">
         {(() => {
-          const AUTO_BORDER_TYPES = ["banner", "text", "cta"];
-          const SUBSTANTIVE_TYPES = ["banner", "text", "cta", "divider"];
+          const AUTO_BORDER_TYPES = ["banner", "text", "cta", "form"];
+          const SUBSTANTIVE_TYPES = ["banner", "text", "cta", "divider", "form"];
 
           // "실제로 렌더링되는" 블록(알 수 없는 타입은 제외)들의 인덱스만 순서대로 모은다.
           const substantiveIndices = page.blocks
@@ -102,6 +103,18 @@ export default async function PublicPage({
                     label={block.label}
                     href={block.href}
                     color={block.color}
+                    hasBorderAfter={hasBorderAfter}
+                  />
+                </ScrollReveal>
+              );
+            }
+            if (block.type === "form") {
+              return (
+                <ScrollReveal key={index} effect={block.scrollEffect}>
+                  <FormBlock
+                    block={block}
+                    pageSlug={page.slug}
+                    isPublished={page.status === "published"}
                     hasBorderAfter={hasBorderAfter}
                   />
                 </ScrollReveal>
