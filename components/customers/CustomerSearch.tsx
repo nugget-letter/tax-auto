@@ -8,6 +8,13 @@ type Props = { initialQuery: string; status: string | null };
 export default function CustomerSearch({ initialQuery, status }: Props) {
   const router = useRouter();
   const [value, setValue] = useState(initialQuery);
+  // 뒤로가기 등 소프트 내비게이션에서는 컴포넌트가 그대로 마운트된 채 prop만
+  // 바뀌므로, 렌더 중에 이전 prop 값과 비교해 입력창을 URL의 실제 ?q=와 다시 맞춘다.
+  const [syncedQuery, setSyncedQuery] = useState(initialQuery);
+  if (initialQuery !== syncedQuery) {
+    setSyncedQuery(initialQuery);
+    setValue(initialQuery);
+  }
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
