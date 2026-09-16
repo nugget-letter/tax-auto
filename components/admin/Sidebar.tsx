@@ -6,6 +6,7 @@ import { ActionButton } from "seed-design/ui/action-button";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "대시보드" },
+  { href: "/admin/customers", label: "고객 신청" },
   { href: "/admin/published", label: "발행된 URL" },
   { href: "/admin/new", label: "새 페이지" },
 ];
@@ -23,7 +24,10 @@ export default function Sidebar() {
         </div>
         <nav className="space-y-1 px-3">
           {NAV_ITEMS.map((item) => {
-            const active = pathname === item.href;
+            // /admin/customers/… 하위 화면에서도 메뉴가 켜지게 한다. /admin은
+            // 모든 경로의 접두어라 정확히 일치할 때만 활성으로 본다.
+            const active =
+              item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
