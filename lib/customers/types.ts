@@ -35,8 +35,13 @@ const phoneSchema = z
   .pipe(z.string().min(1, "연락처를 입력해주세요"));
 
 // 공개 폼 제출. consented는 true여야만 통과한다.
+//
+// pageSlug는 우리 랜딩페이지(/c/[slug])의 폼에서 올 때만 붙는다. 외부 사이트
+// (tax-sales.vercel.app의 Apps Script)가 서버끼리 보낼 때는 슬러그가 없는 대신
+// 공유 토큰으로 인증하고, source에 어디서 왔는지를 직접 담아 보낸다.
 export const submissionSchema = z.object({
-  pageSlug: z.string().min(1),
+  pageSlug: z.string().min(1).optional(),
+  source: z.string().trim().max(100).optional(),
   name: z.string().trim().min(1, "이름을 입력해주세요"),
   office: z.string().trim().default(""),
   phone: phoneSchema,

@@ -48,6 +48,39 @@ describe("submissionSchema", () => {
   });
 });
 
+describe("submissionSchema — 외부 유입", () => {
+  const external = {
+    name: "김세무",
+    phone: "010-1234-5678",
+    consented: true as const,
+    source: "tax-sales",
+  };
+
+  it("pageSlug 없이도 통과한다", () => {
+    const result = submissionSchema.safeParse(external);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.pageSlug).toBeUndefined();
+      expect(result.data.source).toBe("tax-sales");
+    }
+  });
+
+  it("source는 생략할 수 있다", () => {
+    const { source: _omitted, ...withoutSource } = external;
+    const result = submissionSchema.safeParse(withoutSource);
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.source).toBeUndefined();
+  });
+
+  it("지나치게 긴 source는 거부한다", () => {
+    expect(submissionSchema.safeParse({ ...external, source: "x".repeat(101) }).success).toBe(false);
+  });
+
+  it("pageSlug가 빈 문자열이면 거부한다", () => {
+    expect(submissionSchema.safeParse({ ...external, pageSlug: "" }).success).toBe(false);
+  });
+});
+
 describe("customerInputSchema", () => {
   const valid = {
     name: "김세무",
