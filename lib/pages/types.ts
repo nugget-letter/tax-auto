@@ -49,11 +49,31 @@ export const dividerBlockSchema = z.object({
 });
 export type DividerBlock = z.infer<typeof dividerBlockSchema>;
 
+export const FORM_BLOCK_DEFAULTS = {
+  title: "",
+  buttonLabel: "신청하기",
+  buttonColor: "#FEE500",
+  consentText: "개인정보 수집·이용에 동의합니다",
+  successMessage: "신청이 접수됐어요. 곧 연락드릴게요!",
+};
+
+export const formBlockSchema = z.object({
+  type: z.literal("form"),
+  title: z.string().optional(),
+  buttonLabel: z.string().min(1, "버튼 문구를 입력해주세요"),
+  buttonColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "색상은 #RRGGBB 형식이어야 해요"),
+  consentText: z.string().min(1, "동의 문구를 입력해주세요"),
+  successMessage: z.string().min(1, "완료 메시지를 입력해주세요"),
+  scrollEffect: scrollEffectSchema.optional(),
+});
+export type FormBlock = z.infer<typeof formBlockSchema>;
+
 export const blockSchema = z.discriminatedUnion("type", [
   bannerBlockSchema,
   textBlockSchema,
   ctaBlockSchema,
   dividerBlockSchema,
+  formBlockSchema,
 ]);
 
 export type BannerBlock = z.infer<typeof bannerBlockSchema>;
@@ -64,15 +84,21 @@ export type Block = z.infer<typeof blockSchema>;
 export const pageStatusSchema = z.enum(["draft", "published", "archived"]);
 export type PageStatus = z.infer<typeof pageStatusSchema>;
 
-export const pageInputSchema = z.object({
-  title: z.string().min(1, "제목을 입력해주세요"),
-  slug: z
-    .string()
-    .min(1, "슬러그를 입력해주세요")
-    .regex(/^[a-z0-9-]+$/, "영문 소문자, 숫자, 하이픈만 사용할 수 있어요"),
-  status: pageStatusSchema,
-  blocks: z.array(blockSchema),
-});
+export const pageInputSchema = z
+  .object({
+    title: z.string().min(1, "제목을 입력해주세요"),
+    slug: z
+      .string()
+      .min(1, "슬러그를 입력해주세요")
+      .regex(/^[a-z0-9-]+$/, "영문 소문자, 숫자, 하이픈만 사용할 수 있어요"),
+    status: pageStatusSchema,
+    blocks: z.array(blockSchema),
+  })
+  // 한 페이지에 폼이 둘이면 어느 폼으로 신청했는지가 의미 없어진다.
+  .refine((page) => page.blocks.filter((block) => block.type === "form").length <= 1, {
+    message: "신청 폼은 페이지당 하나만 넣을 수 있어요",
+    path: ["blocks"],
+  });
 export type PageInput = z.infer<typeof pageInputSchema>;
 
 export type PageRecord = PageInput & {

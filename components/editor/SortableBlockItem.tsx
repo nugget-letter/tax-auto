@@ -7,6 +7,7 @@ import BannerBlockEditor from "./BannerBlockEditor";
 import TextBlockEditor from "./TextBlockEditor";
 import CtaBlockEditor from "./CtaBlockEditor";
 import DividerBlockEditor from "./DividerBlockEditor";
+import FormBlockEditor from "./FormBlockEditor";
 
 export type EditableBlock = Block & { _key: string };
 
@@ -47,6 +48,7 @@ export default function SortableBlockItem({ block, onChange, onRemove }: Props) 
       {block.type === "text" && <TextBlockEditor block={block} onChange={onChange} />}
       {block.type === "cta" && <CtaBlockEditor block={block} onChange={onChange} />}
       {block.type === "divider" && <DividerBlockEditor block={block} onChange={onChange} />}
+      {block.type === "form" && <FormBlockEditor block={block} onChange={onChange} />}
     </div>
   );
 }
