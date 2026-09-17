@@ -65,10 +65,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body
-        className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} ${plexKr.variable} ${plexMono.variable} font-sans antialiased`}
-      >
+    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} ${plexKr.variable} ${plexMono.variable}`}>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

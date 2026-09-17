@@ -2,19 +2,13 @@
 
 html {
   color-scheme: light;
-  /* next/font/google에서 주입된 폰트 변수를 명시적으로 선언해 공개 페이지 토큰을 보호한다 */
-  --font-noto-sans-kr: system-ui, sans-serif;
-  --font-noto-serif-kr: system-ui, serif;
-  --font-nanum-gothic: system-ui, sans-serif;
-  --font-nanum-myeongjo: system-ui, serif;
-  --font-gothic-a1: system-ui, sans-serif;
 }
 
 @theme {
   --font-sans: var(--font-noto-sans-kr), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-noto-serif-kr), ui-serif, serif;
-  --font-display: var(--font-gothic-a1), ui-sans-serif, sans-serif;
-  --font-admin: var(--font-plex-kr), ui-sans-serif, sans-serif;
+  --font-display: var(--font-gothic-a1), "Apple SD Gothic Neo", ui-sans-serif, sans-serif;
+  --font-admin: var(--font-plex-kr), "Apple SD Gothic Neo", ui-sans-serif, sans-serif;
   --font-num: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* 너겟 브랜드 색상(nugget-tax와 동일 값) — 관리자 도구(/admin) 전용.
@@ -28,12 +22,86 @@ html {
   --color-navy-900: #15151c;
 
   /* 잉크 색상 (텍스트/아이콘용) WCAG AA 레벨 대비 */
-  --color-ink-muted: #6b7280;
-  --color-ink-sidebar: #4b5563;
+  --color-ink-muted: #6E665E;
+  --color-ink-sidebar: #A79E94;
 }
 
 body {
   background-color: white;
+}
+
+@layer components {
+  /* 어드민 캔버스. fixed로 두어 스크롤해도 오로라가 따라오지 않게 한다. */
+  .admin-canvas {
+    background:
+      radial-gradient(760px 420px at 12% -8%, #ffd9a8 0%, transparent 62%),
+      radial-gradient(700px 480px at 92% 8%, #cfe0ff 0%, transparent 60%),
+      linear-gradient(160deg, #f7f8fc 0%, #eef1f8 100%);
+    background-attachment: fixed;
+  }
+
+  .glass-panel {
+    background: rgb(255 255 255 / 0.76);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgb(255 255 255 / 0.85);
+    box-shadow: 0 6px 22px rgb(20 25 60 / 0.09);
+    border-radius: 14px;
+  }
+
+  .glass-panel-warn {
+    background: rgb(255 247 237 / 0.82);
+    border-color: rgb(251 146 60 / 0.35);
+  }
+
+  .glass-field {
+    background: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.9);
+    box-shadow: 0 1px 4px rgb(20 25 60 / 0.06);
+    border-radius: 10px;
+  }
+
+  /* 랜딩의 앰버 포커스 링은 다크 바탕 기준(10.8:1)이라
+     1.76:1로 WCAG 3:1에 못 미치므로 어두운 외곽선으로 맞춘다. */
+  .focus-flame:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #ffb03a,
+      0 0 0 3.5px rgb(21 21 28 / 0.55);
+  }
+
+  .flame-text {
+    background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .flame-bar {
+    background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
+  }
+
+  .btn-flame {
+    background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
+    color: white;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgb(255 107 44 / 0.85);
+  }
+
+  .btn-quiet {
+    background: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.9);
+    color: #1f2937;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .btn-danger {
+    background: rgb(254 226 226 / 0.85);
+    color: #b91c1c;
+    border-radius: 999px;
+    font-weight: 500;
+  }
 }
 
 .rich-text p {
@@ -99,82 +167,4 @@ body {
     opacity: 1;
     transform: none;
   }
-}
-
-/* 어드민 캔버스 — 글래스모피즘 배경 */
-.admin-canvas {
-  background-image:
-    radial-gradient(760px 12% -8%, rgb(255 255 255 / 0%), rgb(99 102 241 / 0.06) 62%),
-    radial-gradient(700px 92% 8%, rgb(255 255 255 / 0%), transparent 60%),
-    linear-gradient(160deg, #f7f8fc 0%, #eef1f8 100%);
-  background-attachment: fixed;
-}
-
-/* 글래스 패널 — 기본 투명 유리 컨테이너 */
-.glass-panel {
-  background: rgb(255 255 255 / 0.76);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgb(255 255 255 / 0.85);
-  box-shadow: 0 6px 22px rgb(20 25 60 / 0.09);
-  border-radius: 14px;
-}
-
-/* 글래스 패널 경고 — 따뜻한 톤 배경과 주황색 가장자리 */
-.glass-panel-warn {
-  background: rgb(255 247 237 / 0.82);
-  border-color: rgb(251 146 60 / 0.35);
-}
-
-/* 글래스 필드 — 입력 폼용 작은 투명 유리 */
-.glass-field {
-  background: rgb(255 255 255 / 0.7);
-  border: 1px solid rgb(255 255 255 / 0.9);
-  box-shadow: 0 1px 4px rgb(20 25 60 / 0.06);
-  border-radius: 10px;
-}
-
-/* 플레임 포커스 링 — 랜딩 페이지의 앰버 링 보정
-   어두운 바탕(10.8:1 대비)인 원래 디자인이 밝은 유리 위에서는 1.76:1로
-   WCAG 비텍스트 대비 3:1에 못 미치므로 어두운 외곽선으로 맞춘다. */
-.focus-flame:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px #ffb03a,
-    0 0 0 3.5px rgb(21 21 28 / 0.55);
-}
-
-/* 플레임 텍스트 — 브랜드 그래디언트 텍스트 */
-.flame-text {
-  background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* 플레임 바 — 브랜드 그래디언트 배경 */
-.flame-bar {
-  background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
-}
-
-/* 플레임 버튼 — 브랜드 그래디언트, 강한 그림자 */
-.btn-flame {
-  background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgb(255 107 44 / 0.85);
-}
-
-/* 조용한 버튼 — 흰 배경, 약한 테두리 */
-.btn-quiet {
-  background: rgb(255 255 255 / 0.7);
-  border: 1px solid rgb(255 255 255 / 0.9);
-  border-radius: 8px;
-  font-weight: 500;
-}
-
-/* 위험 버튼 — 빨간 배경 */
-.btn-danger {
-  background: rgb(254 226 226 / 0.85);
-  border-radius: 8px;
-  font-weight: 500;
 }
