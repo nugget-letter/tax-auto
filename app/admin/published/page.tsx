@@ -5,6 +5,7 @@ import { formatDate } from "@/lib/format";
 import CopyLinkButton from "@/components/dashboard/CopyLinkButton";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import SendControls from "@/components/dashboard/SendControls";
+import GlassPanel from "@/components/ui/GlassPanel";
 import type { PageRecord } from "@/lib/pages/types";
 
 export const dynamic = "force-dynamic";
@@ -30,9 +31,9 @@ export default async function PublishedUrlsPage() {
   const tagSuggestions = [...new Set(pages.flatMap((page) => page.sendTags))].sort();
 
   return (
-    <div className="mx-auto max-w-3xl p-6">
-      <h1 className="text-xl font-bold text-gray-900">발행된 URL</h1>
-      <p className="mt-1 text-sm text-gray-500">
+    <div className="mx-auto max-w-[1160px] p-8">
+      <h1 className="font-display text-2xl font-extrabold text-[#111827]">발행된 URL</h1>
+      <p className="mt-2 max-w-[70ch] text-sm text-[#4b5563]">
         한 번이라도 발행했던 페이지의 기록이에요. 지금도 발행 중인 링크만 카카오톡 버튼에
         연결하세요 — 보관된 페이지는 방문자에게 &ldquo;아직 공개되지 않은 페이지&rdquo;로 보여요.
       </p>
@@ -42,7 +43,7 @@ export default async function PublishedUrlsPage() {
           아직 발행된 페이지가 없어요.
         </Text>
       ) : (
-        <Box borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2" marginTop="x6">
+        <GlassPanel className="mt-6">
           <VStack as="ul" gap={0}>
             {everPublished.map((page, index) => (
               <HStack
@@ -76,14 +77,14 @@ export default async function PublishedUrlsPage() {
                     type="text"
                     readOnly
                     value={`${origin}/c/${page.slug}`}
-                    className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-600"
+                    className="glass-field focus-flame font-num mt-1.5 w-full px-2.5 py-1.5 text-sm text-[#4b5563]"
                   />
                 </Box>
                 <CopyLinkButton slug={page.slug} />
               </HStack>
             ))}
           </VStack>
-        </Box>
+        </GlassPanel>
       )}
     </div>
   );
