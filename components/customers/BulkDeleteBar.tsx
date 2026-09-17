@@ -38,17 +38,24 @@ export default function BulkDeleteBar({ ids, onCleared }: Props) {
   }
 
   return (
-    <div className="sticky bottom-0 z-10 mt-3 flex flex-wrap items-center justify-between gap-3 rounded border border-gray-300 bg-white px-4 py-3 shadow-lg">
+    <div className="glass-panel sticky bottom-0 z-10 mt-3 flex flex-wrap items-center justify-between gap-3 px-4 py-3 shadow-xl">
       <Text as="span" textStyle="t4Medium" color="fg.neutral">
         {ids.length}명 선택됨
       </Text>
       <div className="flex items-center gap-2">
         {error && (
-          <Text as="span" textStyle="t2Regular" color="fg.critical">
+          <Text as="span" textStyle="t4Regular" color="fg.critical">
             {error}
           </Text>
         )}
-        <ActionButton type="button" variant="ghost" size="small" onClick={onCleared} disabled={loading}>
+        <ActionButton
+          type="button"
+          variant="ghost"
+          size="small"
+          onClick={onCleared}
+          disabled={loading}
+          className="btn-quiet focus-flame"
+        >
           선택 해제
         </ActionButton>
         <ActionButton
@@ -58,6 +65,7 @@ export default function BulkDeleteBar({ ids, onCleared }: Props) {
           onClick={handleDelete}
           loading={loading}
           disabled={loading}
+          className="btn-danger focus-flame"
         >
           선택 삭제
         </ActionButton>
