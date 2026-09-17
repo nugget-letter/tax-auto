@@ -148,3 +148,18 @@ export async function deleteCustomer(id: string): Promise<void> {
   const { error } = await supabase.from("customers").delete().eq("id", id);
   if (error) throw error;
 }
+
+/**
+ * 여러 고객을 한 번의 쿼리로 지우고 실제 삭제된 행 수를 돌려준다.
+ * 이미 없는 id가 섞여 있어도 오류가 아니라 숫자만 줄어든다.
+ */
+export async function deleteCustomers(ids: string[]): Promise<number> {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("customers")
+    .delete()
+    .in("id", ids)
+    .select("id");
+  if (error) throw error;
+  return data ? data.length : 0;
+}

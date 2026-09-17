@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { customerInputSchema, normalizePhone, submissionSchema } from "./types";
+import { bulkDeleteSchema, customerInputSchema, normalizePhone, submissionSchema } from "./types";
 
 describe("normalizePhone", () => {
   it("숫자와 하이픈만 남긴다", () => {
@@ -66,8 +66,11 @@ describe("submissionSchema — 외부 유입", () => {
   });
 
   it("source는 생략할 수 있다", () => {
-    const { source: _omitted, ...withoutSource } = external;
-    const result = submissionSchema.safeParse(withoutSource);
+    const result = submissionSchema.safeParse({
+      name: external.name,
+      phone: external.phone,
+      consented: external.consented,
+    });
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.source).toBeUndefined();
   });
@@ -107,5 +110,32 @@ describe("customerInputSchema", () => {
   });
   it("알 수 없는 상태 거부", () => {
     expect(customerInputSchema.safeParse({ ...valid, status: "vip" }).success).toBe(false);
+  });
+});
+
+describe("bulkDeleteSchema", () => {
+  const id = "06d5a04f-7156-4d99-a1de-a2c6276f9e55";
+
+  it("uuid 배열을 통과시킨다", () => {
+    const result = bulkDeleteSchema.safeParse({ ids: [id] });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.ids).toEqual([id]);
+  });
+
+  it("빈 배열은 거부한다", () => {
+    expect(bulkDeleteSchema.safeParse({ ids: [] }).success).toBe(false);
+  });
+
+  it("uuid가 아닌 값은 거부한다", () => {
+    expect(bulkDeleteSchema.safeParse({ ids: ["not-a-uuid"] }).success).toBe(false);
+  });
+
+  it("100개까지 허용하고 101개는 거부한다", () => {
+    expect(bulkDeleteSchema.safeParse({ ids: Array(100).fill(id) }).success).toBe(true);
+    expect(bulkDeleteSchema.safeParse({ ids: Array(101).fill(id) }).success).toBe(false);
+  });
+
+  it("ids가 없으면 거부한다", () => {
+    expect(bulkDeleteSchema.safeParse({}).success).toBe(false);
   });
 });

@@ -69,6 +69,18 @@ export const customerInputSchema = z.object({
 });
 export type CustomerInput = z.infer<typeof customerInputSchema>;
 
+// 실수나 스크립트로 거대한 요청이 오는 것을 막기 위한 상한. 화면에 한 번에
+// 보이는 고객 수를 훨씬 웃도는 값이라 실사용에는 걸리지 않는다.
+export const BULK_DELETE_LIMIT = 100;
+
+export const bulkDeleteSchema = z.object({
+  ids: z
+    .array(z.uuid("고객 id 형식이 올바르지 않아요"))
+    .min(1, "삭제할 고객을 선택해주세요")
+    .max(BULK_DELETE_LIMIT, `한 번에 ${BULK_DELETE_LIMIT}명까지 삭제할 수 있어요`),
+});
+export type BulkDeleteInput = z.infer<typeof bulkDeleteSchema>;
+
 export type CustomerRecord = CustomerInput & {
   id: string;
   submittedAt: string;
