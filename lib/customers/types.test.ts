@@ -66,8 +66,11 @@ describe("submissionSchema — 외부 유입", () => {
   });
 
   it("source는 생략할 수 있다", () => {
-    const { source: _omitted, ...withoutSource } = external;
-    const result = submissionSchema.safeParse(withoutSource);
+    const result = submissionSchema.safeParse({
+      name: external.name,
+      phone: external.phone,
+      consented: external.consented,
+    });
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.source).toBeUndefined();
   });
