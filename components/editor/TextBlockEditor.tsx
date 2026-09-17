@@ -18,7 +18,7 @@ export default function TextBlockEditor({ block, onChange }: Props) {
         placeholder="소제목 (선택)"
         value={block.heading ?? ""}
         onChange={(e) => onChange({ ...block, heading: e.target.value })}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
       <RichTextEditor
         value={block.bodyHtml}

@@ -15,7 +15,7 @@ export default function DividerStyleSelect({ value, onChange }: Props) {
       <select
         value={value ?? DEFAULT_DIVIDER_STYLE}
         onChange={(e) => onChange(e.target.value as DividerStyle)}
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame px-3 py-2 text-sm"
       >
         {Object.entries(DIVIDER_STYLE_PRESETS).map(([id, preset]) => (
           <option key={id} value={id}>

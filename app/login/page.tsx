@@ -12,14 +12,10 @@ export default async function LoginPage({
     <main
       data-seed=""
       data-seed-color-mode="light-only"
-      className="flex min-h-screen items-center justify-center bg-gray-50 px-4"
+      className="admin-canvas font-admin flex min-h-screen items-center justify-center px-4"
     >
-      <form
-        action="/api/login"
-        method="POST"
-        className="w-full max-w-sm space-y-4 rounded-lg border border-gray-200 bg-white p-8 shadow-sm"
-      >
-        <h1 className="text-lg font-semibold text-gray-900">관리자 로그인</h1>
+      <form action="/api/login" method="POST" className="glass-panel w-full max-w-sm space-y-5 p-8">
+        <h1 className="font-display text-xl font-extrabold text-[#111827]">관리자 로그인</h1>
         <input type="hidden" name="next" value={params.next ?? "/admin"} />
         <TextField
           label="비밀번호"
@@ -28,7 +24,7 @@ export default async function LoginPage({
         >
           <TextFieldInput type="password" name="password" autoFocus />
         </TextField>
-        <ActionButton type="submit" variant="neutralSolid">
+        <ActionButton type="submit" variant="neutralSolid" className="btn-flame focus-flame w-full">
           로그인
         </ActionButton>
       </form>

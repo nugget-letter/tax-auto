@@ -23,7 +23,7 @@ export default function ScrollEffectSelect({ value, onChange }: Props) {
       <select
         value={value ?? "none"}
         onChange={(e) => onChange(e.target.value as ScrollEffect)}
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame px-3 py-2 text-sm"
       >
         {OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>

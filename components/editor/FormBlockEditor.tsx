@@ -8,7 +8,7 @@ type Props = {
   onChange: (block: FormBlock) => void;
 };
 
-const inputClass = "w-full rounded border border-gray-300 px-2 py-1 text-sm";
+const inputClass = "glass-field focus-flame w-full px-3 py-2 text-sm";
 
 export default function FormBlockEditor({ block, onChange }: Props) {
   return (
@@ -37,7 +37,7 @@ export default function FormBlockEditor({ block, onChange }: Props) {
           type="color"
           value={block.buttonColor}
           onChange={(e) => onChange({ ...block, buttonColor: e.target.value })}
-          className="h-8 w-12"
+          className="glass-field focus-flame h-8 w-12"
         />
       </div>
       <input

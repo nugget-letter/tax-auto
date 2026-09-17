@@ -53,7 +53,13 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
   return (
     <div className="space-y-2 rounded border border-gray-200 p-3">
       <p className="text-xs font-medium text-gray-500">배너 이미지</p>
-      <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={uploading}
+        className="focus-flame rounded"
+      />
       {uploading && <p className="text-xs text-gray-400">업로드 중...</p>}
       {error && <p className="text-xs text-red-600">{error}</p>}
       {block.imageUrl && (
@@ -65,14 +71,14 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
         placeholder="오버레이 제목 (선택)"
         value={block.title ?? ""}
         onChange={(e) => onChange({ ...block, title: e.target.value })}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
       <input
         type="text"
         placeholder="부제 (선택)"
         value={block.subtitle ?? ""}
         onChange={(e) => onChange({ ...block, subtitle: e.target.value })}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
       <ScrollEffectSelect
         value={block.scrollEffect}

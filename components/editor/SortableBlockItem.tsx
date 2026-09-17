@@ -29,7 +29,7 @@ export default function SortableBlockItem({ block, onChange, onRemove }: Props) 
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="relative">
+    <div ref={setNodeRef} style={style} className="glass-panel relative p-4">
       <div className="mb-1 flex items-center justify-end gap-2">
         <button
           type="button"
