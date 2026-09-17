@@ -3,6 +3,9 @@ import { Box, HStack, Text, VStack } from "@seed-design/react";
 import { ActionButton } from "seed-design/ui/action-button";
 import type { PageRecord, PageStatus } from "@/lib/pages/types";
 import { formatDate } from "@/lib/format";
+import GlassPanel from "@/components/ui/GlassPanel";
+import SectionLabel from "@/components/ui/SectionLabel";
+import Chip from "@/components/ui/Chip";
 import StatusBadge from "./StatusBadge";
 import CopyLinkButton from "./CopyLinkButton";
 import DuplicateButton from "./DuplicateButton";
@@ -34,20 +37,17 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
             {page.title}
           </Text>
         </HStack>
-        <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
+        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-1">
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
           {page.sentOn && ` · 전송 ${formatDate(page.sentOn)}`}
         </Text>
         {/* 태그는 여기서 읽기 전용으로만 보여준다. 편집은 발행된 URL 화면에서 한다. */}
         {page.sendTags.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-1">
+          <div className="mt-1.5 flex flex-wrap gap-1">
             {page.sendTags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
-              >
+              <Chip key={tag} tone="gray">
                 {tag}
-              </span>
+              </Chip>
             ))}
           </div>
         )}
@@ -93,14 +93,16 @@ export default function PagesTable({ pages }: { pages: PageRecord[] }) {
 
         return (
           <Box key={status}>
-            <Text as="h2" textStyle="t2Bold" color="fg.neutralSubtle" className="mb-2">
+            <SectionLabel>
               {heading} ({groupPages.length})
-            </Text>
-            <Box as="ul" borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
-              {groupPages.map((page, index) => (
-                <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
-              ))}
-            </Box>
+            </SectionLabel>
+            <GlassPanel>
+              <ul>
+                {groupPages.map((page, index) => (
+                  <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
+                ))}
+              </ul>
+            </GlassPanel>
           </Box>
         );
       })}
