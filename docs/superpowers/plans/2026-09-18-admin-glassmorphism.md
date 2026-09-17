@@ -299,7 +299,7 @@ Expected: PASS (11건)
 - [ ] **Step 7: 빌드가 되는지 확인한다**
 
 Run: `npm test && npx tsc --noEmit && npm run lint && npm run build`
-Expected: 전부 통과. 기존 87건 + 새 11건 = 98건.
+Expected: 전부 통과. 기존 92건 + 새 11건 = 103건.
 
 - [ ] **Step 8: 공개 페이지가 안 깨졌는지 눈으로 본다**
 
@@ -1614,7 +1614,7 @@ EOF
 - [ ] **Step 1: 자동 검사를 전부 돌린다**
 
 Run: `npm test && npx tsc --noEmit && npm run lint && npm run build`
-Expected: 전부 통과. 테스트는 기존 87건 + Task 1의 11건 + Task 2의 3건 + Task 4의 8건 = **109건**.
+Expected: 전부 통과. 테스트는 기존 92건 + Task 1의 11건 + Task 2의 3건 + Task 4의 8건 = **114건**.
 
 - [ ] **Step 2: 공개 페이지 회귀를 확인한다**
 

@@ -332,7 +332,7 @@ export const EVENT_META: Record<CalendarEventKind, {
 **테스트를 새로 쓰는 곳** — `lib/ui/tones.ts`와 `lib/calendar/events.ts`의 `summarizeDay`.
 둘 다 순수 함수라 TDD로 간다.
 
-**회귀 방지** — 기존 87개 테스트가 계속 통과해야 한다. `tsc --noEmit`과 `npm run lint`도
+**회귀 방지** — 기존 92개 테스트가 계속 통과해야 한다. `tsc --noEmit`과 `npm run lint`도
 통과해야 한다. `lib/calendar/events.test.ts`는 `EVENT_META` 구조가 바뀌므로 같이 손본다.
 
 **공개 페이지 회귀 확인** — 범위 밖이지만 글꼴 변수와 `--color-navy-950`을 건드리는 작업이라
