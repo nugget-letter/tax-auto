@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { Box, HStack, Text } from "@seed-design/react";
+import { HStack, Text } from "@seed-design/react";
 import type { CustomerRecord } from "@/lib/customers/types";
 import { getTrialDDay } from "@/lib/customers/trial";
+import GlassPanel from "@/components/ui/GlassPanel";
+import SectionLabel from "@/components/ui/SectionLabel";
 import TrialDDayBadge from "./TrialDDayBadge";
 
 type Props = { customers: CustomerRecord[]; today: string };
@@ -18,11 +20,9 @@ export default function EndingSoonSection({ customers, today }: Props) {
   if (customers.length === 0) return null;
 
   return (
-    <Box>
-      <Text as="h2" textStyle="t2Bold" color="fg.critical" className="mb-2">
-        ⚠ 체험 종료 임박 ({customers.length})
-      </Text>
-      <Box as="ul" borderWidth={1} borderColor="stroke.criticalWeak" borderRadius="r2">
+    <GlassPanel tone="warning" className="p-4">
+      <SectionLabel>⚠ 체험 종료 임박 ({customers.length})</SectionLabel>
+      <ul>
         {customers.map((customer, index) => (
           <HStack
             key={customer.id}
@@ -51,7 +51,7 @@ export default function EndingSoonSection({ customers, today }: Props) {
             </HStack>
           </HStack>
         ))}
-      </Box>
-    </Box>
+      </ul>
+    </GlassPanel>
   );
 }

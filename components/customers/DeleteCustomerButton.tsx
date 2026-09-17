@@ -45,6 +45,7 @@ export default function DeleteCustomerButton({ id, name }: Props) {
         onClick={handleClick}
         loading={loading}
         disabled={loading}
+        className="btn-danger focus-flame"
       >
         삭제
       </ActionButton>

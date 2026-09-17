@@ -18,7 +18,7 @@ export default function DateField({ label, value, onChange, hint }: Props) {
           type="date"
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value || null)}
-          className="rounded border border-gray-300 px-3 py-2 text-sm"
+          className="glass-field focus-flame px-3 py-2 text-sm text-[#111827]"
         />
         <button
           type="button"

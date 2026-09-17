@@ -31,13 +31,10 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
   const endingSoon = all.filter((c) => isTrialEndingSoon(c, today));
 
   return (
-    <div className="mx-auto max-w-3xl p-6">
+    <div className="mx-auto max-w-[1160px] p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">고객 신청</h1>
-        <Link
-          href="/admin/customers/new"
-          className="rounded bg-gray-900 px-3 py-1.5 text-sm font-medium text-white"
-        >
+        <h1 className="font-display text-2xl font-extrabold text-[#111827]">고객 신청</h1>
+        <Link href="/admin/customers/new" className="btn-flame focus-flame px-4 py-2 text-sm">
           + 고객 추가
         </Link>
       </div>

@@ -1,11 +1,7 @@
-import { Badge } from "@seed-design/react";
 import { formatDDay } from "@/lib/customers/trial";
+import Chip from "@/components/ui/Chip";
 
-// 아직 남았으면 경고(노랑), 오늘이거나 지났으면 위험(빨강).
+/** D-4 이상은 앰버로 여유, D-3 이하는 빨강으로 급함을 나타낸다. */
 export default function TrialDDayBadge({ dday }: { dday: number }) {
-  return (
-    <Badge tone={dday > 0 ? "warning" : "critical"} variant="solid">
-      {formatDDay(dday)}
-    </Badge>
-  );
+  return <Chip tone={dday >= 4 ? "amber" : "red"}>{formatDDay(dday)}</Chip>;
 }

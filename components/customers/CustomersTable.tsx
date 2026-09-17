@@ -6,6 +6,7 @@ import { Box, HStack, Text } from "@seed-design/react";
 import type { CustomerRecord } from "@/lib/customers/types";
 import { formatDate } from "@/lib/format";
 import { getTrialDDay, getTrialEndsOn } from "@/lib/customers/trial";
+import GlassPanel from "@/components/ui/GlassPanel";
 import CustomerStatusBadge from "./CustomerStatusBadge";
 import TrialDDayBadge from "./TrialDDayBadge";
 import BulkDeleteBar from "./BulkDeleteBar";
@@ -55,10 +56,10 @@ function CustomerRow({
             {customer.office && ` · ${customer.office}`}
           </Text>
         </HStack>
-        <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
+        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-1">
           {contact}
         </Text>
-        <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-0.5">
+        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-0.5">
           접수 {formatDate(customer.submittedAt)}
           {customer.source && ` · 유입: ${customer.source}`}
         </Text>
@@ -66,13 +67,16 @@ function CustomerRow({
       <HStack flexShrink={0} align="center" gap="x3">
         {customer.trialStartedOn && endsOn && (
           <HStack align="center" gap="x2">
-            <Text as="span" textStyle="t2Regular" color="fg.neutralSubtle">
+            <Text as="span" textStyle="t4Regular" color="fg.neutralSubtle">
               체험 {customer.trialStartedOn.slice(5).replace("-", ".")}~{endsOn.slice(5).replace("-", ".")}
             </Text>
             {dday !== null && <TrialDDayBadge dday={dday} />}
           </HStack>
         )}
-        <Link href={`/admin/customers/${customer.id}`} className="text-xs font-medium text-gray-700 underline">
+        <Link
+          href={`/admin/customers/${customer.id}`}
+          className="focus-flame rounded text-sm font-medium text-[#4b5563] underline"
+        >
           열기
         </Link>
       </HStack>
@@ -131,18 +135,20 @@ export default function CustomersTable({ customers, today }: Props) {
         전체 선택
       </label>
 
-      <Box as="ul" borderWidth={1} borderColor="stroke.neutralWeak" borderRadius="r2">
-        {customers.map((customer, index) => (
-          <CustomerRow
-            key={customer.id}
-            customer={customer}
-            isLast={index === customers.length - 1}
-            today={today}
-            selected={selected.includes(customer.id)}
-            onToggle={() => toggle(customer.id)}
-          />
-        ))}
-      </Box>
+      <GlassPanel>
+        <ul>
+          {customers.map((customer, index) => (
+            <CustomerRow
+              key={customer.id}
+              customer={customer}
+              isLast={index === customers.length - 1}
+              today={today}
+              selected={selected.includes(customer.id)}
+              onToggle={() => toggle(customer.id)}
+            />
+          ))}
+        </ul>
+      </GlassPanel>
 
       {selected.length > 0 && <BulkDeleteBar ids={selected} onCleared={() => setSelected([])} />}
     </div>
