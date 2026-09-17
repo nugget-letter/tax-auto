@@ -56,13 +56,14 @@ describe("globals.css는 @layer components로 유리 표면을 정의한다", ()
     expect(css).toMatch(/at\s+92%\s+8%/);
   });
 
-  it(".btn-flame은 color와 border-radius를 가진다", () => {
-    expect(css).toMatch(/\.btn-flame\s*{[\s\S]*?color:\s*white/);
+  it(".btn-flame은 color와 border-radius, 그림자를 가진다", () => {
+    expect(css).toMatch(/\.btn-flame\s*{[\s\S]*?color:\s*#22150b/);
     expect(css).toMatch(/\.btn-flame\s*{[\s\S]*?border-radius:\s*999px/);
+    expect(css).toMatch(/\.btn-flame\s*{[\s\S]*?box-shadow:\s*0\s+10px\s+30px\s+-14px/);
   });
 
   it(".btn-quiet은 color와 border-radius를 가진다", () => {
-    expect(css).toMatch(/\.btn-quiet\s*{[\s\S]*?color:\s*#1f2937/);
+    expect(css).toMatch(/\.btn-quiet\s*{[\s\S]*?color:\s*#4b5563/);
     expect(css).toMatch(/\.btn-quiet\s*{[\s\S]*?border-radius:\s*999px/);
   });
 

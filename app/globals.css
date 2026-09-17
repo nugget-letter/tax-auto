@@ -7,8 +7,8 @@ html {
 @theme {
   --font-sans: var(--font-noto-sans-kr), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-noto-serif-kr), ui-serif, serif;
-  --font-display: var(--font-gothic-a1), "Apple SD Gothic Neo", ui-sans-serif, sans-serif;
-  --font-admin: var(--font-plex-kr), "Apple SD Gothic Neo", ui-sans-serif, sans-serif;
+  --font-display: var(--font-gothic-a1), "Apple SD Gothic Neo", sans-serif;
+  --font-admin: var(--font-plex-kr), "Apple SD Gothic Neo", sans-serif;
   --font-num: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* 너겟 브랜드 색상(nugget-tax와 동일 값) — 관리자 도구(/admin) 전용.
@@ -82,16 +82,16 @@ body {
 
   .btn-flame {
     background: linear-gradient(100deg, #ffb03a 0%, #ff6b2c 52%, #f5333f 100%);
-    color: white;
+    color: #22150b;
     border-radius: 999px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgb(255 107 44 / 0.85);
+    box-shadow: 0 10px 30px -14px rgb(255 107 44 / 0.85);
   }
 
   .btn-quiet {
     background: rgb(255 255 255 / 0.7);
     border: 1px solid rgb(255 255 255 / 0.9);
-    color: #1f2937;
+    color: #4b5563;
     border-radius: 999px;
     font-weight: 500;
   }
