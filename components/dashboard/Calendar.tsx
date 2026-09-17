@@ -2,27 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Text } from "@seed-design/react";
 import {
   EVENT_META,
   buildMonthGrid,
   formatMonthLabel,
   groupByDate,
   shiftMonth,
+  summarizeDay,
   type CalendarEvent,
-  type CalendarEventKind,
 } from "@/lib/calendar/events";
+import { toneClass } from "@/lib/ui/tones";
+import GlassPanel from "@/components/ui/GlassPanel";
 import CalendarDayDetail from "./CalendarDayDetail";
 
 type Props = { events: CalendarEvent[]; month: string; today: string };
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
-
-function countByKind(events: CalendarEvent[]): [CalendarEventKind, number][] {
-  const counts = new Map<CalendarEventKind, number>();
-  for (const event of events) counts.set(event.kind, (counts.get(event.kind) ?? 0) + 1);
-  return [...counts.entries()];
-}
 
 export default function Calendar({ events, month, today }: Props) {
   // 이번 달을 보고 있을 때만 오늘을 미리 펼쳐 둔다. 다른 달로 옮기면 선택이 풀린다.
@@ -34,65 +29,88 @@ export default function Calendar({ events, month, today }: Props) {
   const cells = buildMonthGrid(month);
 
   return (
-    <section className="rounded border border-gray-200 p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <Text as="h2" textStyle="t4Bold" color="fg.neutral">
+    <GlassPanel className="p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-display text-xl font-extrabold text-[#111827]">
           {formatMonthLabel(month)}
-        </Text>
-        <div className="flex items-center gap-1">
+        </h2>
+        <div className="flex items-center gap-1.5">
           <Link
             href={`/admin?month=${shiftMonth(month, -1)}`}
             aria-label="이전 달"
-            className="rounded border border-gray-300 px-2 py-1 text-xs"
+            className="glass-field focus-flame px-3 py-1 text-sm text-[#4b5563]"
           >
             ‹
           </Link>
-          <Link href="/admin" className="rounded border border-gray-300 px-2 py-1 text-xs">
+          <Link href="/admin" className="glass-field focus-flame px-3 py-1 text-sm text-[#4b5563]">
             오늘
           </Link>
           <Link
             href={`/admin?month=${shiftMonth(month, 1)}`}
             aria-label="다음 달"
-            className="rounded border border-gray-300 px-2 py-1 text-xs"
+            className="glass-field focus-flame px-3 py-1 text-sm text-[#4b5563]"
           >
             ›
           </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-px text-center">
-        {WEEKDAYS.map((weekday) => (
-          <div key={weekday} className="pb-1 text-xs text-gray-400">
+      <div className="grid grid-cols-7 gap-1">
+        {WEEKDAYS.map((weekday, index) => (
+          <div
+            key={weekday}
+            className={`pb-2 text-center text-sm ${index === 0 ? "text-[#b91c1c]" : "text-[#6b7280]"}`}
+          >
             {weekday}
           </div>
         ))}
 
         {cells.map((date, index) => {
-          if (!date) return <div key={`empty-${index}`} className="min-h-14" />;
+          if (!date) return <div key={`empty-${index}`} className="min-h-[72px]" />;
 
           const dayEvents = byDate[date] ?? [];
+          const { chips, overflow } = summarizeDay(dayEvents);
           const isToday = date === today;
           const isSelected = date === selected;
+          const isSunday = index % 7 === 0;
 
           return (
             <button
               key={date}
               type="button"
               onClick={() => setSelected(isSelected ? null : date)}
-              className={`min-h-14 rounded p-1 text-left align-top transition-colors ${
-                isSelected ? "bg-gray-900 text-white" : "hover:bg-gray-100"
-              } ${isToday && !isSelected ? "ring-1 ring-gray-900" : ""}`}
+              aria-pressed={isSelected}
+              className={`focus-flame min-h-[72px] rounded-[10px] border p-1.5 text-left align-top transition-colors ${
+                isSelected
+                  ? "border-transparent bg-navy-900"
+                  : isToday
+                    ? "border-navy-900 bg-white/55 hover:bg-white/75"
+                    : "border-transparent bg-white/55 hover:bg-white/75"
+              }`}
             >
-              <span className={`block text-xs ${isSelected ? "text-white" : "text-gray-700"}`}>
+              <span
+                className={`font-num block text-sm ${
+                  isSelected ? "text-white" : isSunday ? "text-[#b91c1c]" : "text-[#374151]"
+                }`}
+              >
                 {Number(date.slice(8, 10))}
               </span>
-              <span className="mt-0.5 flex flex-wrap gap-0.5 text-[10px] leading-none">
-                {countByKind(dayEvents).map(([kind, count]) => (
-                  <span key={kind} title={EVENT_META[kind].label}>
-                    {EVENT_META[kind].icon}
-                    {count > 1 && count}
+              <span className="mt-1 flex flex-col gap-0.5">
+                {chips.map(({ kind, count }) => (
+                  <span
+                    key={kind}
+                    className={`truncate rounded px-1.5 py-px text-[11px] leading-tight font-semibold ${toneClass(EVENT_META[kind].tone)}`}
+                  >
+                    {EVENT_META[kind].shortLabel} {count}
                   </span>
                 ))}
+                {overflow > 0 && (
+                  <span
+                    className={`rounded px-1.5 py-px text-[11px] leading-tight font-semibold ${toneClass("gray")}`}
+                  >
+                    +{overflow}
+                  </span>
+                )}
               </span>
             </button>
           );
@@ -100,6 +118,6 @@ export default function Calendar({ events, month, today }: Props) {
       </div>
 
       {selected && <CalendarDayDetail date={selected} events={byDate[selected] ?? []} />}
-    </section>
+    </GlassPanel>
   );
 }
