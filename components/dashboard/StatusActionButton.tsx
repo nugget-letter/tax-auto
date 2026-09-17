@@ -19,6 +19,8 @@ export default function StatusActionButton({ id, status }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const next = NEXT_ACTION[status];
+  // 다음 동작이 발행이면 주요 버튼(btn-flame), 그 외(보관/복원)는 보조 버튼(btn-quiet)으로 표시한다.
+  const isPublishAction = next.status === "published";
 
   async function handleClick() {
     setLoading(true);
@@ -54,6 +56,7 @@ export default function StatusActionButton({ id, status }: Props) {
         onClick={handleClick}
         loading={loading}
         disabled={loading}
+        className={isPublishAction ? "btn-flame focus-flame" : "btn-quiet focus-flame"}
       >
         {next.label}
       </ActionButton>

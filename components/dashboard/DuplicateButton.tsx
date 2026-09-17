@@ -44,6 +44,7 @@ export default function DuplicateButton({ id }: { id: string }) {
         onClick={handleClick}
         loading={loading}
         disabled={loading}
+        className="btn-quiet focus-flame"
       >
         복제
       </ActionButton>
