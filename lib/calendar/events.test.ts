@@ -184,3 +184,90 @@ describe("formatMonthLabel", () => {
     expect(formatMonthLabel("2026-12")).toBe("2026년 12월");
   });
 });
+
+import { EVENT_META, summarizeDay, type CalendarEvent } from "./events";
+
+function ev(kind: CalendarEvent["kind"]): CalendarEvent {
+  return { kind, date: "2026-09-18", title: "테스트", href: "/admin", tags: [] };
+}
+
+describe("EVENT_META", () => {
+  it("네 종류 모두 짧은 라벨과 톤을 갖는다", () => {
+    expect(EVENT_META["page-created"].shortLabel).toBe("생성");
+    expect(EVENT_META["page-sent"].shortLabel).toBe("전송");
+    expect(EVENT_META["customer-applied"].shortLabel).toBe("신청");
+    expect(EVENT_META["trial-ending"].shortLabel).toBe("종료");
+
+    expect(EVENT_META["page-created"].tone).toBe("indigo");
+    expect(EVENT_META["page-sent"].tone).toBe("blue");
+    expect(EVENT_META["customer-applied"].tone).toBe("green");
+    expect(EVENT_META["trial-ending"].tone).toBe("red");
+  });
+
+  it("상세 목록이 쓰는 icon과 label은 그대로다", () => {
+    expect(EVENT_META["trial-ending"].icon).toBe("⚠️");
+    expect(EVENT_META["trial-ending"].label).toBe("체험 종료");
+  });
+});
+
+describe("summarizeDay", () => {
+  it("빈 하루는 빈 요약을 낸다", () => {
+    expect(summarizeDay([])).toEqual({ chips: [], overflow: 0 });
+  });
+
+  it("같은 종류를 하나로 묶고 건수를 센다", () => {
+    const events = [ev("page-created"), ev("page-created"), ev("page-sent")];
+    expect(summarizeDay(events)).toEqual({
+      chips: [
+        { kind: "page-created", count: 2 },
+        { kind: "page-sent", count: 1 },
+      ],
+      overflow: 0,
+    });
+  });
+
+  it("KIND_ORDER 순서를 지킨다 — 입력 순서와 무관하다", () => {
+    const events = [ev("trial-ending"), ev("customer-applied"), ev("page-created")];
+    expect(summarizeDay(events).chips.map((c) => c.kind)).toEqual([
+      "page-created",
+      "customer-applied",
+      "trial-ending",
+    ]);
+  });
+
+  it("기본 max는 3이고 넘치는 종류는 overflow로 센다", () => {
+    const events = [
+      ev("page-created"),
+      ev("page-sent"),
+      ev("customer-applied"),
+      ev("trial-ending"),
+    ];
+    const summary = summarizeDay(events);
+    expect(summary.chips).toHaveLength(3);
+    expect(summary.chips.map((c) => c.kind)).toEqual([
+      "page-created",
+      "page-sent",
+      "customer-applied",
+    ]);
+    expect(summary.overflow).toBe(1);
+  });
+
+  it("overflow는 종류 수를 세지 건수를 세지 않는다", () => {
+    const events = [
+      ev("page-created"),
+      ev("page-sent"),
+      ev("customer-applied"),
+      ev("trial-ending"),
+      ev("trial-ending"),
+      ev("trial-ending"),
+    ];
+    expect(summarizeDay(events).overflow).toBe(1);
+  });
+
+  it("max를 직접 줄 수 있다", () => {
+    const events = [ev("page-created"), ev("page-sent"), ev("customer-applied")];
+    const summary = summarizeDay(events, 1);
+    expect(summary.chips).toHaveLength(1);
+    expect(summary.overflow).toBe(2);
+  });
+});
