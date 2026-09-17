@@ -51,7 +51,7 @@ export default async function PublishedUrlsPage() {
               >
                 <Box minWidth="0" flexGrow={1}>
                   <HStack align="center" gap="x2" minWidth="0">
-                    <StatusBadge status={page.status} />
+                    <StatusBadge status={page.status} sentOn={page.sentOn} />
                     <Text as="p" textStyle="t4Medium" color="fg.neutral" maxLines={1}>
                       {page.title}
                     </Text>

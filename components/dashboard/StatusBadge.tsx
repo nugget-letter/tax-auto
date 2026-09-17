@@ -1,22 +1,19 @@
 import { Badge } from "@seed-design/react";
 import type { PageStatus } from "@/lib/pages/types";
+import { getPageBadge } from "@/lib/pages/badge";
 
-const LABELS: Record<PageStatus, string> = {
-  draft: "임시저장",
-  published: "발행",
-  archived: "보관",
-};
+export default function StatusBadge({
+  status,
+  sentOn,
+}: {
+  status: PageStatus;
+  sentOn: string | null;
+}) {
+  const { label, tone } = getPageBadge(status, sentOn);
 
-const TONES: Record<PageStatus, "warning" | "positive" | "neutral"> = {
-  draft: "warning",
-  published: "positive",
-  archived: "neutral",
-};
-
-export default function StatusBadge({ status }: { status: PageStatus }) {
   return (
-    <Badge tone={TONES[status]} variant="weak">
-      {LABELS[status]}
+    <Badge tone={tone} variant="weak">
+      {label}
     </Badge>
   );
 }
