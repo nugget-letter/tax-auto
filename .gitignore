@@ -27,3 +27,6 @@ yarn-error.log*
 next-env.d.ts
 .vercel
 .env*
+
+# 디자인 검사 훅 캐시
+.impeccable/
