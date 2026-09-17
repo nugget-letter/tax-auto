@@ -109,4 +109,42 @@ export type PageRecord = PageInput & {
   // 이후 다시 임시저장/보관으로 바뀌어도 지우지 않는다 — "이 페이지가 언제
   // 처음 발행됐는가"를 남겨두기 위해서다.
   publishedAt: string | null;
+  // 실제로 고객에게 링크를 보낸 날짜와 수신 대상 태그. 발행일과 별개로 관리자가 직접 적는다.
+  sentOn: string | null;
+  sendTags: string[];
 };
+
+export const MAX_SEND_TAGS = 20;
+
+/** 앞뒤 공백을 버리고, 빈 값과 중복을 제거한다(입력 순서 유지). */
+export function normalizeSendTags(tags: string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const raw of tags) {
+    const tag = raw.trim();
+    if (!tag || seen.has(tag)) continue;
+    seen.add(tag);
+    result.push(tag);
+  }
+  return result;
+}
+
+const sentOnSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "날짜는 YYYY-MM-DD 형식이어야 해요")
+  .nullable();
+
+// 전송 기록은 에디터 저장(pageInputSchema)과 분리해 둔다 — 에디터가 블록 전체를
+// 덮어쓰기 때문에 같은 요청에 실으면 두 화면이 서로의 변경을 지울 수 있다.
+export const pageSendSchema = z.object({
+  sentOn: sentOnSchema,
+  // 길이 검사는 정규화 전에 한다 — 공백만 잔뜩 든 값이 통과한 뒤 사라지면 사용자가
+  // 무엇이 거부됐는지 알 수 없다. 개수 제한은 정규화 후 기준이다.
+  sendTags: z
+    .array(z.string().max(50, "태그는 50자까지 쓸 수 있어요"))
+    .transform(normalizeSendTags)
+    .refine((tags) => tags.length <= MAX_SEND_TAGS, {
+      message: `태그는 ${MAX_SEND_TAGS}개까지 붙일 수 있어요`,
+    }),
+});
+export type PageSendInput = z.infer<typeof pageSendSchema>;
