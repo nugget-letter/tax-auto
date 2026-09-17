@@ -60,3 +60,10 @@ alter table customers enable row level security;
 
 create index if not exists customers_submitted_at_idx on customers (submitted_at desc);
 create index if not exists customers_status_idx on customers (status);
+
+-- 2026-09-18 마이그레이션: 페이지 전송 기록.
+-- 발행(published_at)과 별개로, 실제로 고객에게 링크를 보낸 날짜와 수신 대상 태그를 남긴다.
+alter table pages add column if not exists sent_on date;
+alter table pages add column if not exists send_tags text[] not null default '{}';
+
+create index if not exists pages_sent_on_idx on pages (sent_on desc);

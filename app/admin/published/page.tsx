@@ -4,6 +4,8 @@ import { listPages } from "@/lib/pages/repository";
 import { formatDate } from "@/lib/format";
 import CopyLinkButton from "@/components/dashboard/CopyLinkButton";
 import StatusBadge from "@/components/dashboard/StatusBadge";
+import SendControls from "@/components/dashboard/SendControls";
+import type { PageRecord } from "@/lib/pages/types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +20,14 @@ export default async function PublishedUrlsPage() {
   const [pages, origin] = await Promise.all([listPages(), getOrigin()]);
   // 지금 발행 상태인 것만이 아니라, 한 번이라도 발행된 적 있는 페이지를 전부
   // 모아 보여준다 — 나중에 보관 처리했어도 "언제 이걸 보냈었지" 확인할 기록으로 남긴다.
+  // 정렬은 실제로 보낸 날이 있으면 그 날 기준이다 — 최근에 보낸 것이 위로 온다.
+  const sortKey = (page: PageRecord) => page.sentOn ?? page.publishedAt!;
   const everPublished = pages
     .filter((page) => page.publishedAt !== null)
-    .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!));
+    .sort((a, b) => sortKey(b).localeCompare(sortKey(a)));
+
+  // 이미 쓰인 태그를 모아 자동완성 후보로 넘긴다.
+  const tagSuggestions = [...new Set(pages.flatMap((page) => page.sendTags))].sort();
 
   return (
     <div className="mx-auto max-w-3xl p-6">
@@ -51,7 +58,7 @@ export default async function PublishedUrlsPage() {
               >
                 <Box minWidth="0" flexGrow={1}>
                   <HStack align="center" gap="x2" minWidth="0">
-                    <StatusBadge status={page.status} />
+                    <StatusBadge status={page.status} sentOn={page.sentOn} />
                     <Text as="p" textStyle="t4Medium" color="fg.neutral" maxLines={1}>
                       {page.title}
                     </Text>
@@ -59,6 +66,12 @@ export default async function PublishedUrlsPage() {
                   <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
                     발행일 {formatDate(page.publishedAt!)}
                   </Text>
+                  <SendControls
+                    pageId={page.id}
+                    initialSentOn={page.sentOn}
+                    initialTags={page.sendTags}
+                    tagSuggestions={tagSuggestions}
+                  />
                   <input
                     type="text"
                     readOnly

@@ -11,6 +11,8 @@ type PageRow = {
   created_at: string;
   updated_at: string;
   published_at: string | null;
+  sent_on: string | null;
+  send_tags: string[];
 };
 
 /** Postgres unique_violation. Supabase/PostgREST가 error.code로 그대로 전달한다. */
@@ -42,6 +44,8 @@ function rowToRecord(row: PageRow): PageRecord {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     publishedAt: row.published_at,
+    sentOn: row.sent_on,
+    sendTags: row.send_tags ?? [],
   };
 }
 
@@ -160,4 +164,28 @@ export async function deletePage(id: string): Promise<void> {
   const supabase = getSupabaseServerClient();
   const { error } = await supabase.from("pages").delete().eq("id", id);
   if (error) throw error;
+}
+
+/**
+ * 전송 기록만 갱신한다. 에디터 저장(updatePage)과 분리해 둔 이유는, 에디터가
+ * 블록 전체를 덮어쓰기 때문에 같은 요청에 전송 정보를 실으면 두 화면이 서로의
+ * 변경을 지울 수 있어서다.
+ */
+export async function updatePageSend(
+  id: string,
+  input: { sentOn: string | null; sendTags: string[] }
+): Promise<PageRecord | null> {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("pages")
+    .update({
+      sent_on: input.sentOn,
+      send_tags: input.sendTags,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .select("*")
+    .maybeSingle();
+  if (error) throw error;
+  return data ? rowToRecord(data as PageRow) : null;
 }

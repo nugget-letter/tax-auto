@@ -29,14 +29,28 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
     >
       <Box minWidth="0" flexGrow={1}>
         <HStack align="center" gap="x2" minWidth="0">
-          <StatusBadge status={page.status} />
+          <StatusBadge status={page.status} sentOn={page.sentOn} />
           <Text as="span" textStyle="t4Medium" color="fg.neutral" maxLines={1}>
             {page.title}
           </Text>
         </HStack>
         <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
+          {page.sentOn && ` · 전송 ${formatDate(page.sentOn)}`}
         </Text>
+        {/* 태그는 여기서 읽기 전용으로만 보여준다. 편집은 발행된 URL 화면에서 한다. */}
+        {page.sendTags.length > 0 && (
+          <div className="mt-1 flex flex-wrap gap-1">
+            {page.sendTags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </Box>
       <HStack flexShrink={0} align="center" gap="x2">
         <HStack align="center" gap="x1">
