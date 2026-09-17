@@ -376,7 +376,8 @@ Expected: FAIL — `Failed to resolve import "./tones"`
 /**
  * 어드민 상태 색 한 벌. 상태 뱃지·태그 칩·달력 칩·D-day가 전부 여기서 색을 받는다.
  * 브랜드 플레임과 섞지 않는다 — 플레임은 액센트고 이쪽은 데이터 구분용이다.
- * 여섯 톤 모두 유리 패널 위에서 WCAG AA를 통과한다 (가장 낮은 gray가 6.9:1).
+ * 여섯 톤 모두 WCAG AA를 통과한다. 가장 낮은 것은 green 4.57:1로 기준(4.5:1)에
+ * 아슬아슬하다 — green의 두 색은 더 흐리게 바꾸지 말 것. 가장 높은 것은 indigo 8.06:1.
  */
 export const TONES = ["indigo", "blue", "green", "red", "amber", "gray"] as const;
 
