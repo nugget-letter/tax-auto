@@ -61,7 +61,7 @@
 | `components/dashboard/PagesTable.tsx` | 유리 패널, 섹션 라벨, 태그 칩 |
 | `components/dashboard/SendControls.tsx` | 입력칸·태그 칩 |
 | `components/dashboard/CopyLinkButton.tsx` 외 3개 버튼 | 버튼 스타일 |
-| `components/customers/*` 9개 | 유리 패널, 칩, 입력칸 |
+| `components/customers/*` 10개 | 유리 패널, 칩, 입력칸 |
 | `components/editor/*` 12개 | 표면·입력칸만 |
 | `app/admin/page.tsx`, `published/page.tsx`, `customers/page.tsx`, `customers/[id]/page.tsx`, `customers/new/page.tsx`, `new/page.tsx`, `[id]/edit/page.tsx` | 폭, 제목 글꼴 |
 | `app/login/page.tsx` | 유리 카드 |
@@ -1246,6 +1246,7 @@ EOF
 - Modify: `components/customers/DateField.tsx`
 - Modify: `components/customers/CustomerForm.tsx`
 - Modify: `components/customers/DeleteCustomerButton.tsx`
+- Modify: `components/customers/BulkDeleteBar.tsx`
 - Modify: `app/admin/customers/page.tsx`
 - Modify: `app/admin/customers/[id]/page.tsx`
 - Modify: `app/admin/customers/new/page.tsx`
@@ -1664,3 +1665,19 @@ EOF
 - [ ] **Step 7: 마무리**
 
 **REQUIRED SUB-SKILL:** superpowers:finishing-a-development-branch를 써서 마무리한다.
+
+---
+
+## 실행 중 발견한 계획서 결함
+
+이 계획은 PR #9(고객 일괄 삭제)가 `main`에 머지되기 **전** 브랜치에서 작성됐다. 그래서
+`main` 기준으로 실행할 때 두 가지가 어긋났다.
+
+1. **Task 9의 `CustomersTable.tsx` 코드 블록이 낡았다.** 체크박스 선택(`selected`/`onToggle`)과
+   `BulkDeleteBar` 연동이 빠진 버전이라, 그대로 덮었다면 일괄 삭제 기능이 사라졌을 것이다.
+   구현자가 이를 알아채고 기능을 보존한 채 스타일만 입혔다.
+2. **`BulkDeleteBar.tsx`가 Task 9 파일 목록에서 누락됐다.** 뒤늦게 같은 태스크에 추가했다
+   (커밋 `0652b80`).
+
+교훈: 계획서를 쓴 브랜치와 실행할 브랜치가 다르면, 태스크의 코드 블록이 현재 파일보다
+낡았을 수 있다. 브리프의 코드를 그대로 복사하되 **현재 파일에만 있는 기능은 보존**해야 한다.
