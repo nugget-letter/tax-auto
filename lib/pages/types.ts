@@ -13,6 +13,20 @@ export type ScrollEffect = z.infer<typeof scrollEffectSchema>;
 export const dividerStyleSchema = z.enum(["solid-light", "solid-dark", "dotted", "dashed", "dots"]);
 export type DividerStyle = z.infer<typeof dividerStyleSchema>;
 
+export const ctaVariantSchema = z.enum(["filled", "outline"]);
+export type CtaVariant = z.infer<typeof ctaVariantSchema>;
+
+// 높이(상하 여백) · 너비 · 글씨 크기는 따로 고른다 — 셋을 한 "크기"로 묶으면
+// "글씨만 키우고 싶다" 같은 요구를 못 받는다.
+export const ctaHeightSchema = z.enum(["sm", "md", "lg"]);
+export type CtaHeight = z.infer<typeof ctaHeightSchema>;
+
+export const ctaWidthSchema = z.enum(["auto", "wide", "full"]);
+export type CtaWidth = z.infer<typeof ctaWidthSchema>;
+
+export const ctaFontSizeSchema = z.enum(["sm", "md", "lg", "xl"]);
+export type CtaFontSize = z.infer<typeof ctaFontSizeSchema>;
+
 export const bannerBlockSchema = z.object({
   type: z.literal("banner"),
   imageUrl: z.string().min(1),
@@ -38,7 +52,13 @@ export const ctaBlockSchema = z.object({
     .refine((value) => value === "" || /^(https?:\/\/|tel:)/.test(value), {
       message: "링크는 https:// 또는 tel:로 시작해야 해요.",
     }),
+  // filled = 배경 채우기(기존 동작), outline = 투명 배경 + 테두리. 두 경우 모두 color를 쓴다.
+  // 기존에 저장된 블록에는 없는 필드라 모두 optional이다 — 없으면 예전 모양(filled, 꽉 찬 너비)으로 읽는다.
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "색상은 #RRGGBB 형식이어야 해요"),
+  variant: ctaVariantSchema.optional(),
+  height: ctaHeightSchema.optional(),
+  width: ctaWidthSchema.optional(),
+  fontSize: ctaFontSizeSchema.optional(),
   scrollEffect: scrollEffectSchema.optional(),
 });
 

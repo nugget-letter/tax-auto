@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeSendTags, pageSendSchema } from "./types";
+import { ctaBlockSchema, normalizeSendTags, pageSendSchema } from "./types";
 
 describe("normalizeSendTags", () => {
   it("앞뒤 공백을 제거한다", () => {
@@ -41,5 +41,25 @@ describe("pageSendSchema", () => {
     const twenty = Array.from({ length: 20 }, (_, i) => `t${i}`);
     expect(pageSendSchema.safeParse({ sentOn: null, sendTags: twenty }).success).toBe(true);
     expect(pageSendSchema.safeParse({ sentOn: null, sendTags: [...twenty, "t20"] }).success).toBe(false);
+  });
+});
+
+describe("ctaBlockSchema", () => {
+  const base = { type: "cta", label: "상담", href: "https://a.com", color: "#FEE500" };
+
+  it("모양 필드가 없는 기존 블록도 통과한다", () => {
+    const result = ctaBlockSchema.safeParse(base);
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.variant).toBeUndefined();
+  });
+  it("outline + 높이/너비/글씨 크기를 받는다", () => {
+    const block = { ...base, variant: "outline", height: "lg", width: "auto", fontSize: "xl" };
+    expect(ctaBlockSchema.safeParse(block).success).toBe(true);
+  });
+  it("모르는 값은 거부한다", () => {
+    expect(ctaBlockSchema.safeParse({ ...base, variant: "ghost" }).success).toBe(false);
+    expect(ctaBlockSchema.safeParse({ ...base, height: "xl" }).success).toBe(false);
+    expect(ctaBlockSchema.safeParse({ ...base, width: "half" }).success).toBe(false);
+    expect(ctaBlockSchema.safeParse({ ...base, fontSize: "xxl" }).success).toBe(false);
   });
 });
