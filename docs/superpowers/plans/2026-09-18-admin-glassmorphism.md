@@ -1088,10 +1088,12 @@ export default function StatusBadge({
             <SectionLabel>
               {heading} ({groupPages.length})
             </SectionLabel>
-            <GlassPanel as="ul">
-              {groupPages.map((page, index) => (
-                <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
-              ))}
+            <GlassPanel>
+              <ul>
+                {groupPages.map((page, index) => (
+                  <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
+                ))}
+              </ul>
             </GlassPanel>
           </Box>
         );
@@ -1100,17 +1102,8 @@ export default function StatusBadge({
   );
 ```
 
-`GlassPanel`은 `as` prop이 없으므로 `<ul>` 대신 감싸는 방식으로 쓴다:
-
-```tsx
-<GlassPanel>
-  <ul>
-    {groupPages.map((page, index) => (
-      <PageRow key={page.id} page={page} isLast={index === groupPages.length - 1} />
-    ))}
-  </ul>
-</GlassPanel>
-```
+`GlassPanel`은 `as` prop이 없다. `<ul>`을 안에 넣어 감싼다 — `PageRow`가 `HStack as="li"`라
+`<ul>` 직계 자식이 `<li>`가 되어 HTML도 맞는다.
 
 파일 위쪽 import에 두 줄을 더하고, 빈 상태 텍스트도 14px로 올린다:
 
