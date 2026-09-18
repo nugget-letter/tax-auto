@@ -112,7 +112,7 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
       </div>
 
       {error && (
-        <Text as="p" textStyle="t2Regular" color="fg.critical">
+        <Text as="p" textStyle="t4Regular" color="fg.critical">
           {error}
         </Text>
       )}

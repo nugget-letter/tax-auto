@@ -32,7 +32,7 @@ export default function DateField({ label, value, onChange, hint }: Props) {
             type="button"
             onClick={() => onChange(null)}
             aria-label={`${label} 지우기`}
-            className="px-1 text-xs text-gray-400 hover:text-gray-700"
+            className="px-1 text-sm text-[#6b7280] hover:text-[#111827]"
           >
             ×
           </button>

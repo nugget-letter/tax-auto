@@ -10,7 +10,7 @@ type Props = {
 
 export default function CtaBlockEditor({ block, onChange }: Props) {
   return (
-    <div className="space-y-2 rounded border border-gray-200 p-3">
+    <div className="space-y-2">
       <p className="text-xs font-medium text-gray-500">CTA 버튼</p>
       <input
         type="text"

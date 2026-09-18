@@ -51,7 +51,7 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
   }
 
   return (
-    <div className="space-y-2 rounded border border-gray-200 p-3">
+    <div className="space-y-2">
       <p className="text-xs font-medium text-gray-500">배너 이미지</p>
       <input
         type="file"
@@ -60,7 +60,7 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
         disabled={uploading}
         className="focus-flame rounded"
       />
-      {uploading && <p className="text-xs text-gray-400">업로드 중...</p>}
+      {uploading && <p className="text-sm text-[#6b7280]">업로드 중...</p>}
       {error && <p className="text-xs text-red-600">{error}</p>}
       {block.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element

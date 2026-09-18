@@ -35,12 +35,12 @@ export default function SortableBlockItem({ block, onChange, onRemove }: Props) 
           type="button"
           {...attributes}
           {...listeners}
-          className="mr-auto cursor-grab text-sm text-gray-400 active:cursor-grabbing"
+          className="mr-auto cursor-grab text-sm text-[#6b7280] active:cursor-grabbing"
           aria-label="블록 순서 변경 핸들"
         >
           ⠿
         </button>
-        <button type="button" onClick={onRemove} className="text-xs text-red-600">
+        <button type="button" onClick={onRemove} className="focus-flame rounded text-sm text-[#b91c1c]">
           블록 삭제
         </button>
       </div>

@@ -64,7 +64,7 @@ export default async function PublishedUrlsPage() {
                       {page.title}
                     </Text>
                   </HStack>
-                  <Text as="p" textStyle="t2Regular" color="fg.neutralSubtle" className="mt-1">
+                  <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-1">
                     발행일 {formatDate(page.publishedAt!)}
                   </Text>
                   <SendControls
