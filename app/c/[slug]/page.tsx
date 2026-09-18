@@ -103,6 +103,10 @@ export default async function PublicPage({
                     label={block.label}
                     href={block.href}
                     color={block.color}
+                    variant={block.variant}
+                    height={block.height}
+                    width={block.width}
+                    fontSize={block.fontSize}
                     hasBorderAfter={hasBorderAfter}
                   />
                 </ScrollReveal>
