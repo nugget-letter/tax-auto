@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Noto_Serif_KR, Nanum_Gothic, Nanum_Myeongjo, Gothic_A1 } from "next/font/google";
+import {
+  Noto_Sans_KR,
+  Noto_Serif_KR,
+  Nanum_Gothic,
+  Nanum_Myeongjo,
+  Gothic_A1,
+  IBM_Plex_Sans_KR,
+  IBM_Plex_Mono,
+} from "next/font/google";
 import "./globals.css";
-import "@seed-design/css/all.css";
+import "@seed-design/css/all.layered.css";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -32,8 +40,23 @@ const nanumMyeongjo = Nanum_Myeongjo({
 
 const gothicA1 = Gothic_A1({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "700", "800", "900"],
   variable: "--font-gothic-a1",
+});
+
+// 어드민 전용 글꼴. 세일즈 랜딩(tax-brending-message)과 같은 체계를 쓴다.
+// body가 아니라 어드민 껍데기에만 거는 이유는 globals.css의 --font-sans를
+// 공개 랜딩페이지가 함께 쓰기 때문이다.
+const plexKr = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-kr",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -42,10 +65,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body
-        className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} font-sans antialiased`}
-      >
+    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} ${plexKr.variable} ${plexMono.variable}`}>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

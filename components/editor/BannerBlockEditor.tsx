@@ -51,11 +51,17 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
   }
 
   return (
-    <div className="space-y-2 rounded border border-gray-200 p-3">
-      <p className="text-xs font-medium text-gray-500">배너 이미지</p>
-      <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} />
-      {uploading && <p className="text-xs text-gray-400">업로드 중...</p>}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+    <div className="space-y-2">
+      <p className="text-sm font-medium text-gray-500">배너 이미지</p>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={uploading}
+        className="focus-flame rounded"
+      />
+      {uploading && <p className="text-sm text-[#6b7280]">업로드 중...</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       {block.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={block.imageUrl} alt="" className="h-32 w-full rounded object-cover" />
@@ -65,14 +71,14 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
         placeholder="오버레이 제목 (선택)"
         value={block.title ?? ""}
         onChange={(e) => onChange({ ...block, title: e.target.value })}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
       <input
         type="text"
         placeholder="부제 (선택)"
         value={block.subtitle ?? ""}
         onChange={(e) => onChange({ ...block, subtitle: e.target.value })}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
       <ScrollEffectSelect
         value={block.scrollEffect}

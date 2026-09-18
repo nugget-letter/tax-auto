@@ -21,6 +21,7 @@ export default function CopyLinkButton({ slug }: { slug: string }) {
       fontWeight="medium"
       color="fg.neutralSubtle"
       onClick={handleCopy}
+      className="btn-quiet focus-flame"
     >
       {copied ? "복사됨!" : "URL 복사"}
     </ActionButton>

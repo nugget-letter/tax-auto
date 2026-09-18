@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Text } from "@seed-design/react";
 import DateField from "@/components/customers/DateField";
 import { MAX_SEND_TAGS, normalizeSendTags } from "@/lib/pages/types";
+import { toneClass } from "@/lib/ui/tones";
 
 type Props = {
   pageId: string;
@@ -75,14 +76,14 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700"
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${toneClass("gray")}`}
           >
             {tag}
             <button
               type="button"
               onClick={() => removeTag(tag)}
               aria-label={`${tag} 태그 삭제`}
-              className="text-gray-400 hover:text-gray-700"
+              className="focus-flame rounded-full text-[#4b5563] hover:text-[#111827]"
             >
               ×
             </button>
@@ -101,7 +102,7 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
           }}
           onBlur={addTag}
           placeholder="+ 태그 입력"
-          className="w-28 rounded border border-gray-300 px-2 py-0.5 text-xs"
+          className="glass-field focus-flame w-28 px-2 py-0.5 text-sm"
         />
         <datalist id={`tag-suggestions-${pageId}`}>
           {tagSuggestions.map((tag) => (
@@ -111,7 +112,7 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
       </div>
 
       {error && (
-        <Text as="p" textStyle="t2Regular" color="fg.critical">
+        <Text as="p" textStyle="t4Regular" color="fg.critical">
           {error}
         </Text>
       )}

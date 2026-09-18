@@ -78,32 +78,32 @@ export default function BlockList({ blocks, onChange }: Props) {
           ))}
         </SortableContext>
       </DndContext>
-      <div className="flex flex-wrap gap-2 border-t border-gray-200 pt-3">
+      <div className="flex flex-wrap gap-2 border-t border-black/8 pt-3">
         <button
           type="button"
           onClick={() => addBlock("banner")}
-          className="rounded border border-gray-300 px-3 py-1 text-sm"
+          className="btn-quiet focus-flame px-3 py-1 text-sm"
         >
           + 배너 이미지
         </button>
         <button
           type="button"
           onClick={() => addBlock("text")}
-          className="rounded border border-gray-300 px-3 py-1 text-sm"
+          className="btn-quiet focus-flame px-3 py-1 text-sm"
         >
           + 본문 텍스트
         </button>
         <button
           type="button"
           onClick={() => addBlock("cta")}
-          className="rounded border border-gray-300 px-3 py-1 text-sm"
+          className="btn-quiet focus-flame px-3 py-1 text-sm"
         >
           + CTA 버튼
         </button>
         <button
           type="button"
           onClick={() => addBlock("divider")}
-          className="rounded border border-gray-300 px-3 py-1 text-sm"
+          className="btn-quiet focus-flame px-3 py-1 text-sm"
         >
           + 구분선
         </button>
@@ -112,7 +112,7 @@ export default function BlockList({ blocks, onChange }: Props) {
           onClick={() => addBlock("form")}
           disabled={hasFormBlock}
           title={hasFormBlock ? "신청 폼은 페이지당 하나만 넣을 수 있어요" : undefined}
-          className="rounded border border-gray-300 px-3 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+          className="btn-quiet focus-flame px-3 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-40"
         >
           + 신청 폼
         </button>

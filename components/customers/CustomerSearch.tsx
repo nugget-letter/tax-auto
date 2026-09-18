@@ -32,9 +32,9 @@ export default function CustomerSearch({ initialQuery, status }: Props) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="이름 / 사무실 / 연락처 / 이메일"
-        className="w-64 rounded border border-gray-300 px-3 py-1.5 text-sm"
+        className="glass-field focus-flame w-64 px-3 py-2 text-sm text-[#111827]"
       />
-      <button type="submit" className="rounded border border-gray-300 px-3 py-1.5 text-sm">
+      <button type="submit" className="btn-quiet focus-flame px-3 py-1.5 text-sm">
         검색
       </button>
     </form>

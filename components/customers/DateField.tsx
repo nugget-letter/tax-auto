@@ -18,12 +18,12 @@ export default function DateField({ label, value, onChange, hint }: Props) {
           type="date"
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value || null)}
-          className="rounded border border-gray-300 px-3 py-2 text-sm"
+          className="glass-field focus-flame px-3 py-2 text-sm text-[#111827]"
         />
         <button
           type="button"
           onClick={() => onChange(todayInSeoul())}
-          className="rounded border border-gray-300 px-2 py-1 text-xs"
+          className="btn-quiet focus-flame px-2 py-1 text-sm"
         >
           오늘
         </button>
@@ -32,13 +32,13 @@ export default function DateField({ label, value, onChange, hint }: Props) {
             type="button"
             onClick={() => onChange(null)}
             aria-label={`${label} 지우기`}
-            className="px-1 text-xs text-gray-400 hover:text-gray-700"
+            className="focus-flame px-1 text-sm text-[#6b7280] hover:text-[#111827]"
           >
             ×
           </button>
         )}
       </div>
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
+      {hint && <p className="text-sm text-gray-500">{hint}</p>}
     </div>
   );
 }

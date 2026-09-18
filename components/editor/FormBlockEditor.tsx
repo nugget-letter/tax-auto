@@ -8,13 +8,13 @@ type Props = {
   onChange: (block: FormBlock) => void;
 };
 
-const inputClass = "w-full rounded border border-gray-300 px-2 py-1 text-sm";
+const inputClass = "glass-field focus-flame w-full px-3 py-2 text-sm";
 
 export default function FormBlockEditor({ block, onChange }: Props) {
   return (
-    <div className="space-y-2 rounded border border-gray-200 p-3">
-      <p className="text-xs font-medium text-gray-500">신청 폼</p>
-      <p className="text-xs text-gray-400">
+    <div className="space-y-2">
+      <p className="text-sm font-medium text-gray-500">신청 폼</p>
+      <p className="text-sm text-[#6b7280]">
         방문자가 이름·사무실·연락처·이메일을 남기면 어드민 &ldquo;고객 신청&rdquo;에 쌓여요.
       </p>
       <input
@@ -37,7 +37,7 @@ export default function FormBlockEditor({ block, onChange }: Props) {
           type="color"
           value={block.buttonColor}
           onChange={(e) => onChange({ ...block, buttonColor: e.target.value })}
-          className="h-8 w-12"
+          className="glass-field focus-flame h-8 w-12"
         />
       </div>
       <input

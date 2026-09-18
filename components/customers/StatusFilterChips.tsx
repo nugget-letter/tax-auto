@@ -16,14 +16,12 @@ function href(status: CustomerStatus | null, q: string): string {
   return query ? `/admin/customers?${query}` : "/admin/customers";
 }
 
-function Chip({ active, to, children }: { active: boolean; to: string; children: React.ReactNode }) {
+function FilterChip({ active, to, children }: { active: boolean; to: string; children: React.ReactNode }) {
   return (
     <Link
       href={to}
-      className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-        active
-          ? "border-gray-900 bg-gray-900 text-white"
-          : "border-gray-300 bg-white text-gray-600 hover:bg-gray-100"
+      className={`focus-flame rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+        active ? "bg-navy-900 text-white" : "glass-field text-[#4b5563] hover:bg-white/90"
       }`}
     >
       {children}
@@ -34,13 +32,13 @@ function Chip({ active, to, children }: { active: boolean; to: string; children:
 export default function StatusFilterChips({ current, counts, total, q }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
-      <Chip active={current === null} to={href(null, q)}>
+      <FilterChip active={current === null} to={href(null, q)}>
         전체 {total}
-      </Chip>
+      </FilterChip>
       {CUSTOMER_STATUSES.map((status) => (
-        <Chip key={status} active={current === status} to={href(status, q)}>
+        <FilterChip key={status} active={current === status} to={href(status, q)}>
           {CUSTOMER_STATUS_LABELS[status]} {counts[status]}
-        </Chip>
+        </FilterChip>
       ))}
     </div>
   );

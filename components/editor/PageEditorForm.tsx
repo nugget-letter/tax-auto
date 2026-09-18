@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Block, PageRecord, PageStatus } from "@/lib/pages/types";
+import GlassPanel from "@/components/ui/GlassPanel";
 import BlockList, { type EditableBlock } from "./BlockList";
+
+const inputClass = "glass-field focus-flame w-full px-3 py-2 text-sm text-[#111827]";
+const labelClass = "block text-sm font-medium text-gray-700";
 
 function withKeys(blocks: Block[]): EditableBlock[] {
   return blocks.map((block) => ({ ...block, _key: crypto.randomUUID() }));
@@ -107,62 +111,64 @@ export default function PageEditorForm({ initialSlug, initialPage }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-6">
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">제목</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
-        />
-      </div>
+    <div className="mx-auto max-w-[1160px] p-8">
+      <GlassPanel className="space-y-6 p-6">
+        <div className="space-y-2">
+          <label className={labelClass}>제목</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className={inputClass}
+          />
+        </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">URL 슬러그 (/c/{slug})</label>
-        <input
-          type="text"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
-        />
-        {initialPage?.status === "published" && (
-          <p className="text-xs text-amber-600">
-            이미 발행된 페이지예요. 슬러그를 바꾸면 이미 발송된 카카오 메시지의 링크가 깨져요.
-          </p>
-        )}
-      </div>
+        <div className="space-y-2">
+          <label className={labelClass}>URL 슬러그 (/c/{slug})</label>
+          <input
+            type="text"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            className={inputClass}
+          />
+          {initialPage?.status === "published" && (
+            <p className="text-sm text-amber-800">
+              이미 발행된 페이지예요. 슬러그를 바꾸면 이미 발송된 카카오 메시지의 링크가 깨져요.
+            </p>
+          )}
+        </div>
 
-      <BlockList blocks={blocks} onChange={setBlocks} />
+        <BlockList blocks={blocks} onChange={setBlocks} />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={preview}
-          disabled={saving !== null}
-          className="rounded border border-gray-300 px-4 py-2 text-sm disabled:opacity-50"
-        >
-          {saving === "preview" ? "저장 중..." : "미리보기"}
-        </button>
-        <button
-          type="button"
-          onClick={() => save("draft")}
-          disabled={saving !== null}
-          className="rounded border border-gray-300 px-4 py-2 text-sm disabled:opacity-50"
-        >
-          {saving === "draft" ? "저장 중..." : "임시저장"}
-        </button>
-        <button
-          type="button"
-          onClick={() => save("published")}
-          disabled={saving !== null}
-          className="rounded bg-gray-900 px-4 py-2 text-sm text-white disabled:opacity-50"
-        >
-          {saving === "published" ? "발행 중..." : "발행"}
-        </button>
-      </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={preview}
+            disabled={saving !== null}
+            className="btn-quiet focus-flame px-4 py-2 text-sm disabled:opacity-50"
+          >
+            {saving === "preview" ? "저장 중..." : "미리보기"}
+          </button>
+          <button
+            type="button"
+            onClick={() => save("draft")}
+            disabled={saving !== null}
+            className="btn-quiet focus-flame px-4 py-2 text-sm disabled:opacity-50"
+          >
+            {saving === "draft" ? "저장 중..." : "임시저장"}
+          </button>
+          <button
+            type="button"
+            onClick={() => save("published")}
+            disabled={saving !== null}
+            className="btn-flame focus-flame px-4 py-2 text-sm disabled:opacity-50"
+          >
+            {saving === "published" ? "발행 중..." : "발행"}
+          </button>
+        </div>
+      </GlassPanel>
     </div>
   );
 }

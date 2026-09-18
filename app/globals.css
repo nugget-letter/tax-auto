@@ -1,3 +1,11 @@
+/* 레이어 우선순위는 왼쪽이 낮고 오른쪽이 높다.
+   base(Tailwind preflight) < seed < components 순서가 중요하다 —
+   seed를 preflight보다 앞에 두면 preflight의 `padding: 0`이 seed Box의
+   패딩과 테두리를 전부 지워 버린다. 반대로 components를 seed보다 뒤에 둬야
+   .btn-flame 같은 우리 버튼 스타일이 seed ActionButton을
+   이기며, Tailwind의 utilities는 여전히 우리 components보다 위에 남는다. */
+@layer theme, base, seed-base, seed-components, components, utilities;
+
 @import "tailwindcss";
 
 html {
@@ -7,16 +15,111 @@ html {
 @theme {
   --font-sans: var(--font-noto-sans-kr), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-noto-serif-kr), ui-serif, serif;
+  --font-display: var(--font-gothic-a1), "Apple SD Gothic Neo", sans-serif;
+  --font-admin: var(--font-plex-kr), "Apple SD Gothic Neo", sans-serif;
+  --font-num: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
   /* 너겟 브랜드 색상(nugget-tax와 동일 값) — 관리자 도구(/admin) 전용.
      공개 랜딩페이지(/c/[slug])는 별도의 미니멀 디자인을 그대로 유지한다. */
-  --color-brand-orange: #ffb020;
-  --color-brand-red: #ff5a36;
+  --color-brand-amber: #FFB03A;
+  --color-brand-orange: #FF6B2C;
+  --color-brand-red: #F5333F;
+
+  /* 플레임 그라데이션. .flame-text/.flame-bar/.btn-flame이 각자 리터럴을 들고
+     있으면 나중에 값이 어긋날 수 있으므로 토큰 하나로 정의해 세 곳에서
+     참조한다. 위 브랜드 색 세 토큰을 실제로 사용하는 유일한 곳이기도 하다. */
+  --gradient-flame: linear-gradient(
+    100deg,
+    var(--color-brand-amber) 0%,
+    var(--color-brand-orange) 52%,
+    var(--color-brand-red) 100%
+  );
+
+  /* ReadingProgressBar를 위한 navy 토큰 */
   --color-navy-950: #0b0b10;
   --color-navy-900: #15151c;
+
+  /* 잉크 색상 (텍스트/아이콘용) WCAG AA 레벨 대비 */
+  --color-ink-muted: #6E665E;
+  --color-ink-sidebar: #A79E94;
 }
 
 body {
   background-color: white;
+}
+
+@layer components {
+  /* 어드민 캔버스. fixed로 두어 스크롤해도 오로라가 따라오지 않게 한다. */
+  .admin-canvas {
+    background:
+      radial-gradient(760px 420px at 12% -8%, #ffd9a8 0%, transparent 62%),
+      radial-gradient(700px 480px at 92% 8%, #cfe0ff 0%, transparent 60%),
+      linear-gradient(160deg, #f7f8fc 0%, #eef1f8 100%);
+    background-attachment: fixed;
+  }
+
+  .glass-panel {
+    background: rgb(255 255 255 / 0.76);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgb(255 255 255 / 0.85);
+    box-shadow: 0 6px 22px rgb(20 25 60 / 0.09);
+    border-radius: 14px;
+  }
+
+  .glass-panel-warn {
+    background: rgb(255 247 237 / 0.82);
+    border-color: rgb(251 146 60 / 0.35);
+  }
+
+  .glass-field {
+    background: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.9);
+    box-shadow: 0 1px 4px rgb(20 25 60 / 0.06);
+    border-radius: 10px;
+  }
+
+  /* 랜딩의 앰버 포커스 링은 다크 바탕 기준(10.8:1)이라
+     1.76:1로 WCAG 3:1에 못 미치므로 어두운 외곽선으로 맞춘다. */
+  .focus-flame:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #ffb03a,
+      0 0 0 3.5px rgb(21 21 28 / 0.55);
+  }
+
+  .flame-text {
+    background: var(--gradient-flame);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .flame-bar {
+    background: var(--gradient-flame);
+  }
+
+  .btn-flame {
+    background: var(--gradient-flame);
+    color: #22150b;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px -14px rgb(255 107 44 / 0.85);
+  }
+
+  .btn-quiet {
+    background: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.9);
+    color: #4b5563;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .btn-danger {
+    background: rgb(254 226 226 / 0.85);
+    color: #b91c1c;
+    border-radius: 999px;
+    font-weight: 500;
+  }
 }
 
 .rich-text p {

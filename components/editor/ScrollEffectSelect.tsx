@@ -19,11 +19,11 @@ type Props = {
 export default function ScrollEffectSelect({ value, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <label className="text-xs font-medium text-gray-500">스크롤 효과</label>
+      <label className="text-sm font-medium text-gray-500">스크롤 효과</label>
       <select
         value={value ?? "none"}
         onChange={(e) => onChange(e.target.value as ScrollEffect)}
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="glass-field focus-flame px-3 py-2 text-sm"
       >
         {OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>

@@ -18,9 +18,7 @@ export default function Sidebar() {
     <aside className="flex w-56 shrink-0 flex-col justify-between bg-navy-950">
       <div>
         <div className="px-5 py-6">
-          <span className="bg-gradient-to-r from-brand-orange to-brand-red bg-clip-text text-xl font-extrabold italic text-transparent">
-            nugget.
-          </span>
+          <span className="flame-text text-xl font-extrabold italic font-display">nugget.</span>
         </div>
         <nav className="space-y-1 px-3">
           {NAV_ITEMS.map((item) => {
@@ -32,12 +30,18 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block rounded px-3 py-2 text-sm font-medium transition-colors ${
+                className={`relative block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   active
                     ? "bg-white/10 text-white"
-                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    : "text-ink-sidebar hover:bg-white/5 hover:text-white"
                 }`}
               >
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="flame-bar absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full"
+                  />
+                )}
                 {item.label}
               </Link>
             );
