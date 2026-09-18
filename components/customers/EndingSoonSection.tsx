@@ -31,7 +31,7 @@ export default function EndingSoonSection({ customers, today }: Props) {
             justify="space-between"
             gap="x4"
             px="x4"
-            py="x3"
+            py="x4"
             borderBottomWidth={index === customers.length - 1 ? 0 : 1}
             borderColor="stroke.neutralWeak"
           >

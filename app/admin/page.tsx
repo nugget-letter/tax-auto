@@ -22,11 +22,11 @@ export default async function AdminDashboardPage({
   const events = toCalendarEvents(pages, customers);
 
   return (
-    <div className="mx-auto max-w-[1160px] space-y-8 p-8">
+    <div className="mx-auto max-w-[1160px] space-y-10 p-8">
       <Calendar events={events} month={month} today={today} />
 
       <div>
-        <h1 className="font-display mb-5 text-2xl font-extrabold text-[#111827]">
+        <h1 className="font-display mb-6 text-2xl font-extrabold text-[#111827]">
           랜딩페이지 목록
         </h1>
         <PagesTable pages={pages} />

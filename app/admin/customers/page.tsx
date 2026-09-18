@@ -32,14 +32,14 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
 
   return (
     <div className="mx-auto max-w-[1160px] p-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between">
         <h1 className="font-display text-2xl font-extrabold text-[#111827]">고객 신청</h1>
         <Link href="/admin/customers/new" className="btn-flame focus-flame px-4 py-2 text-sm">
           + 고객 추가
         </Link>
       </div>
 
-      <VStack gap="x6">
+      <VStack gap="x8">
         <EndingSoonSection customers={endingSoon} today={today} />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <StatusFilterChips current={statusFilter} counts={counts} total={all.length} q={q} />

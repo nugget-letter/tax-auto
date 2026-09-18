@@ -36,8 +36,8 @@ function CustomerRow({
       align="center"
       justify="space-between"
       gap="x4"
-      px="x4"
-      py="x4"
+      px="x5"
+      py="x6"
       borderBottomWidth={isLast ? 0 : 1}
       borderColor="stroke.neutralWeak"
     >

@@ -25,8 +25,8 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
       align="center"
       justify="space-between"
       gap="x4"
-      px="x4"
-      py="x4"
+      px="x5"
+      py="x6"
       borderBottomWidth={isLast ? 0 : 1}
       borderColor="stroke.neutralWeak"
     >
@@ -37,13 +37,13 @@ function PageRow({ page, isLast }: { page: PageRecord; isLast: boolean }) {
             {page.title}
           </Text>
         </HStack>
-        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-1">
+        <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-1.5">
           생성 {formatDate(page.createdAt)} · 수정 {formatDate(page.updatedAt)}
           {page.sentOn && ` · 전송 ${formatDate(page.sentOn)}`}
         </Text>
         {/* 태그는 여기서 읽기 전용으로만 보여준다. 편집은 발행된 URL 화면에서 한다. */}
         {page.sendTags.length > 0 && (
-          <div className="mt-1.5 flex flex-wrap gap-1">
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
             {page.sendTags.map((tag) => (
               <Chip key={tag} tone="gray">
                 {tag}
@@ -86,7 +86,7 @@ export default function PagesTable({ pages }: { pages: PageRecord[] }) {
   }
 
   return (
-    <VStack gap="x6">
+    <VStack gap="x8">
       {GROUPS.map(({ status, heading }) => {
         const groupPages = pages.filter((page) => page.status === status);
         if (groupPages.length === 0) return null;

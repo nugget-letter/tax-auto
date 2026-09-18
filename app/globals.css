@@ -1,8 +1,10 @@
-/* seed-design(all.layered.css)의 레이어가 우리 컴포넌트 레이어보다 먼저 오도록
-   순서를 미리 선언한다. 이렇게 해야 seed-base/seed-components가 가장 낮은
-   우선순위를 갖고, 우리 @layer components(.btn-flame 등)가 seed의 버튼 스타일을
+/* 레이어 우선순위는 왼쪽이 낮고 오른쪽이 높다.
+   base(Tailwind preflight) < seed < components 순서가 중요하다 —
+   seed를 preflight보다 앞에 두면 preflight의 `padding: 0`이 seed Box의
+   패딩과 테두리를 전부 지워 버린다. 반대로 components를 seed보다 뒤에 둬야
+   .btn-flame 같은 우리 버튼 스타일이 seed ActionButton을
    이기며, Tailwind의 utilities는 여전히 우리 components보다 위에 남는다. */
-@layer seed-base, seed-components, theme, base, components, utilities;
+@layer theme, base, seed-base, seed-components, components, utilities;
 
 @import "tailwindcss";
 
