@@ -50,7 +50,7 @@ export default function DeleteCustomerButton({ id, name }: Props) {
         삭제
       </ActionButton>
       {error && (
-        <Text as="p" textStyle="t2Regular" color="fg.critical" className="mt-1 text-right">
+        <Text as="p" textStyle="t4Regular" color="fg.critical" className="mt-1 text-right">
           {error}
         </Text>
       )}

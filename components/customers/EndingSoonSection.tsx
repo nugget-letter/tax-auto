@@ -10,7 +10,7 @@ type Props = { customers: CustomerRecord[]; today: string };
 
 function ReminderMark({ label, on }: { label: string; on: string | null }) {
   return (
-    <Text as="span" textStyle="t2Regular" color={on ? "fg.neutralSubtle" : "fg.critical"}>
+    <Text as="span" textStyle="t4Regular" color={on ? "fg.neutralSubtle" : "fg.critical"}>
       {label} {on ? "✓" : "✗"}
     </Text>
   );
@@ -45,7 +45,10 @@ export default function EndingSoonSection({ customers, today }: Props) {
             <HStack align="center" gap="x3" flexShrink={0}>
               <ReminderMark label="리마인드 1차" on={customer.reminded1On} />
               <ReminderMark label="2차" on={customer.reminded2On} />
-              <Link href={`/admin/customers/${customer.id}`} className="text-xs font-medium text-gray-700 underline">
+              <Link
+                href={`/admin/customers/${customer.id}`}
+                className="focus-flame rounded text-sm font-medium text-[#4b5563] underline"
+              >
                 열기
               </Link>
             </HStack>

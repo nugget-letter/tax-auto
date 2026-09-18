@@ -138,7 +138,7 @@ export default function CustomerForm(props: Props) {
             {initial && <DeleteCustomerButton id={initial.id} name={initial.name} />}
           </div>
         </div>
-  
+
         <section className="space-y-3 rounded border border-gray-200 p-4">
           <h2 className="text-sm font-bold text-gray-900">기본 정보</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -213,7 +213,7 @@ export default function CustomerForm(props: Props) {
             </div>
           )}
         </section>
-  
+
         <section className="space-y-4 rounded border border-gray-200 p-4">
           <h2 className="text-sm font-bold text-gray-900">진행</h2>
           <DateField
@@ -242,7 +242,7 @@ export default function CustomerForm(props: Props) {
             onChange={(v) => set("reminded2On", v)}
           />
         </section>
-  
+
         <section className="space-y-2 rounded border border-gray-200 p-4">
           <h2 className="text-sm font-bold text-gray-900">메모</h2>
           <textarea
@@ -252,9 +252,9 @@ export default function CustomerForm(props: Props) {
             className={inputClass}
           />
         </section>
-  
+
         {error && <p className="text-sm text-red-600">{error}</p>}
-  
+
         <div className="flex gap-2">
           <Link href="/admin/customers" className="rounded border border-gray-300 px-4 py-2 text-sm">
             취소
