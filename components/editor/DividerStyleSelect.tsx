@@ -11,7 +11,7 @@ type Props = {
 export default function DividerStyleSelect({ value, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <label className="text-xs font-medium text-gray-500">구분선 스타일</label>
+      <label className="text-sm font-medium text-gray-500">구분선 스타일</label>
       <select
         value={value ?? DEFAULT_DIVIDER_STYLE}
         onChange={(e) => onChange(e.target.value as DividerStyle)}

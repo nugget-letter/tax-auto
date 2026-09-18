@@ -78,7 +78,7 @@ export default function BlockList({ blocks, onChange }: Props) {
           ))}
         </SortableContext>
       </DndContext>
-      <div className="flex flex-wrap gap-2 border-t border-gray-200 pt-3">
+      <div className="flex flex-wrap gap-2 border-t border-black/8 pt-3">
         <button
           type="button"
           onClick={() => addBlock("banner")}

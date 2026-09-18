@@ -13,7 +13,7 @@ const inputClass = "glass-field focus-flame w-full px-3 py-2 text-sm";
 export default function FormBlockEditor({ block, onChange }: Props) {
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-gray-500">신청 폼</p>
+      <p className="text-sm font-medium text-gray-500">신청 폼</p>
       <p className="text-sm text-[#6b7280]">
         방문자가 이름·사무실·연락처·이메일을 남기면 어드민 &ldquo;고객 신청&rdquo;에 쌓여요.
       </p>

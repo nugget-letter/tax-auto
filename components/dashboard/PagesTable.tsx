@@ -93,7 +93,7 @@ export default function PagesTable({ pages }: { pages: PageRecord[] }) {
 
         return (
           <Box key={status}>
-            <SectionLabel>
+            <SectionLabel as="h2">
               {heading} ({groupPages.length})
             </SectionLabel>
             <GlassPanel>

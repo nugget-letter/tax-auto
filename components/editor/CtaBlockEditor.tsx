@@ -11,7 +11,7 @@ type Props = {
 export default function CtaBlockEditor({ block, onChange }: Props) {
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-gray-500">CTA 버튼</p>
+      <p className="text-sm font-medium text-gray-500">CTA 버튼</p>
       <input
         type="text"
         placeholder="버튼 텍스트 (예: 상담 신청하기)"

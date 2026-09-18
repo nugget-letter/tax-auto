@@ -12,7 +12,7 @@ type Props = {
 export default function TextBlockEditor({ block, onChange }: Props) {
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-gray-500">본문 텍스트</p>
+      <p className="text-sm font-medium text-gray-500">본문 텍스트</p>
       <input
         type="text"
         placeholder="소제목 (선택)"

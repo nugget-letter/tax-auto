@@ -83,7 +83,7 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
               type="button"
               onClick={() => removeTag(tag)}
               aria-label={`${tag} 태그 삭제`}
-              className="focus-flame rounded-full"
+              className="focus-flame rounded-full text-[#4b5563] hover:text-[#111827]"
             >
               ×
             </button>
@@ -102,7 +102,7 @@ export default function SendControls({ pageId, initialSentOn, initialTags, tagSu
           }}
           onBlur={addTag}
           placeholder="+ 태그 입력"
-          className="glass-field focus-flame w-28 px-2 py-0.5 text-xs"
+          className="glass-field focus-flame w-28 px-2 py-0.5 text-sm"
         />
         <datalist id={`tag-suggestions-${pageId}`}>
           {tagSuggestions.map((tag) => (

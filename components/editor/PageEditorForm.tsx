@@ -132,7 +132,7 @@ export default function PageEditorForm({ initialSlug, initialPage }: Props) {
             className={inputClass}
           />
           {initialPage?.status === "published" && (
-            <p className="text-xs text-amber-600">
+            <p className="text-sm text-amber-800">
               이미 발행된 페이지예요. 슬러그를 바꾸면 이미 발송된 카카오 메시지의 링크가 깨져요.
             </p>
           )}

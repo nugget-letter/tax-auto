@@ -139,7 +139,7 @@ export default function CustomerForm(props: Props) {
           </div>
         </div>
 
-        <section className="space-y-3 rounded border border-gray-200 p-4">
+        <section className="space-y-3 p-4">
           <h2 className="text-sm font-bold text-gray-900">기본 정보</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
@@ -182,7 +182,7 @@ export default function CustomerForm(props: Props) {
                 className={inputClass}
               />
               {props.mode === "edit" && props.sourcePage && (
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-sm text-gray-500">
                   신청 페이지:{" "}
                   <Link href={`/admin/${props.sourcePage.id}/edit`} className="underline">
                     {props.sourcePage.title} →
@@ -214,7 +214,7 @@ export default function CustomerForm(props: Props) {
           )}
         </section>
 
-        <section className="space-y-4 rounded border border-gray-200 p-4">
+        <section className="space-y-4 p-4">
           <h2 className="text-sm font-bold text-gray-900">진행</h2>
           <DateField
             label="한 달 무료 체험 시작일"
@@ -243,7 +243,7 @@ export default function CustomerForm(props: Props) {
           />
         </section>
 
-        <section className="space-y-2 rounded border border-gray-200 p-4">
+        <section className="space-y-2 p-4">
           <h2 className="text-sm font-bold text-gray-900">메모</h2>
           <textarea
             rows={5}
@@ -256,13 +256,13 @@ export default function CustomerForm(props: Props) {
         {error && <p className="text-sm text-red-600">{error}</p>}
 
         <div className="flex gap-2">
-          <Link href="/admin/customers" className="rounded border border-gray-300 px-4 py-2 text-sm">
+          <Link href="/admin/customers" className="btn-quiet focus-flame px-4 py-2 text-sm">
             취소
           </Link>
           <button
             type="submit"
             disabled={saving}
-            className="rounded bg-gray-900 px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="btn-flame focus-flame px-4 py-2 text-sm disabled:opacity-50"
           >
             {saving ? "저장 중..." : "저장"}
           </button>

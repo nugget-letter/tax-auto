@@ -9,7 +9,7 @@ import {
   IBM_Plex_Mono,
 } from "next/font/google";
 import "./globals.css";
-import "@seed-design/css/all.css";
+import "@seed-design/css/all.layered.css";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],

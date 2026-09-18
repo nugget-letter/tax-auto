@@ -72,3 +72,26 @@ describe("globals.css는 @layer components로 유리 표면을 정의한다", ()
     expect(css).toMatch(/\.btn-danger\s*{[\s\S]*?border-radius:\s*999px/);
   });
 });
+
+describe("globals.css는 플레임 그라데이션을 토큰 하나로 정의한다", () => {
+  it("--gradient-flame은 브랜드 색 토큰 세 개를 100deg로 잇는다", () => {
+    expect(css).toMatch(
+      /--gradient-flame:\s*linear-gradient\(\s*100deg,\s*var\(--color-brand-amber\)\s*0%,\s*var\(--color-brand-orange\)\s*52%,\s*var\(--color-brand-red\)\s*100%\s*\)/
+    );
+  });
+
+  it.each([".flame-text", ".flame-bar", ".btn-flame"])(
+    "%s는 그라데이션을 리터럴로 복제하지 않고 var(--gradient-flame)을 참조한다",
+    (selector) => {
+      const escaped = selector.replace(/[.]/g, "\\.");
+      expect(css).toMatch(
+        new RegExp(`${escaped}\\s*{[\\s\\S]*?background:\\s*var\\(--gradient-flame\\)`)
+      );
+    }
+  );
+
+  it("100deg 플레임 그라데이션 리터럴은 토큰 정의 한 곳에만 존재한다", () => {
+    const matches = css.match(/linear-gradient\(\s*100deg,\s*(?:var\(--color-brand-amber\)|#ffb03a)/gi) ?? [];
+    expect(matches).toHaveLength(1);
+  });
+});

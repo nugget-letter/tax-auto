@@ -12,7 +12,7 @@ type Props = {
 export default function DividerBlockEditor({ block, onChange }: Props) {
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-gray-500">구분선</p>
+      <p className="text-sm font-medium text-gray-500">구분선</p>
       <DividerStyleSelect
         value={block.style}
         onChange={(style) => onChange({ ...block, style })}

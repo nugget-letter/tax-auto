@@ -21,7 +21,7 @@ export default function EndingSoonSection({ customers, today }: Props) {
 
   return (
     <GlassPanel tone="warning" className="p-4">
-      <SectionLabel>⚠ 체험 종료 임박 ({customers.length})</SectionLabel>
+      <SectionLabel as="h2">⚠ 체험 종료 임박 ({customers.length})</SectionLabel>
       <ul>
         {customers.map((customer, index) => (
           <HStack
