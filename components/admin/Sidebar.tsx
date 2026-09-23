@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/admin", label: "대시보드" },
   { href: "/admin/customers", label: "고객 신청" },
   { href: "/admin/published", label: "발행된 URL" },
+  { href: "/admin/analytics", label: "열람 분석" },
   { href: "/admin/new", label: "새 페이지" },
 ];
 

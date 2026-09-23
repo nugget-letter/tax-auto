@@ -155,7 +155,7 @@ function randomId(): string {
 
 ```sql
 create or replace function record_page_view(
-  p_page_id uuid, p_visit_id uuid, p_reader_id text,
+  p_page_id uuid, p_visit_id text, p_reader_id text,
   p_depth smallint, p_dwell_ms integer
 ) returns void as $$
   insert into page_views (visit_id, page_id, reader_id, max_depth, dwell_ms)
@@ -171,7 +171,7 @@ $$ language sql;
 
 ```sql
 create table if not exists page_views (
-  visit_id   uuid primary key,
+  visit_id   text primary key,
   page_id    uuid not null references pages(id) on delete cascade,
   reader_id  text,
   max_depth  smallint not null default 0 check (max_depth between 0 and 100),
@@ -185,6 +185,10 @@ alter table page_views enable row level security;
 create index if not exists page_views_page_id_idx on page_views (page_id, created_at desc);
 ```
 
+> **`visit_id`는 uuid가 아니라 text다.** 위 `randomId()`의 폴백이 uuid 형식을 만들지
+> 않으므로, uuid 칼럼으로 두면 구형 WebView의 기록이 전부 저장 단계에서 실패한다.
+> 폴백을 uuid 형식으로 흉내내는 것보다 칼럼 타입을 넓히는 쪽이 정직하다.
+
 기존 테이블과 같이 서비스 롤로만 접근하므로 RLS는 정책 없이 켠다.
 `on delete cascade` — 페이지를 지우면 통계도 같이 지운다.
 
@@ -195,7 +199,7 @@ create or replace view page_view_stats as
 select
   page_id,
   count(*)                                                   as views,
-  count(distinct coalesce(reader_id, visit_id::text))         as readers,
+  count(distinct coalesce(reader_id, visit_id))               as readers,
   count(*) filter (where max_depth >= 25)                     as reached_25,
   count(*) filter (where max_depth >= 50)                     as reached_50,
   count(*) filter (where max_depth >= 75)                     as reached_75,
@@ -205,7 +209,7 @@ from page_views
 group by page_id;
 ```
 
-`coalesce(reader_id, visit_id::text)` — 스토리지가 막혀 `reader_id`가 없는 방문을 버리지
+`coalesce(reader_id, visit_id)` — 스토리지가 막혀 `reader_id`가 없는 방문을 버리지
 않고 1명으로 계산한다. 버리면 그 기기들이 인원에서 통째로 사라진다.
 
 ## 화면
@@ -254,7 +258,7 @@ group by page_id;
 |---|---|
 | `supabase/schema.sql` | `page_views` 테이블, `record_page_view` 함수, `page_view_stats` 뷰 |
 | `lib/analytics/types.ts` | `trackSchema`, `PageStats` 타입, 마일스톤 상수 |
-| `lib/analytics/depth.ts` | 순수 함수 — 진행률에서 통과한 마일스톤 계산 |
+| `lib/analytics/depth.ts` | 순수 함수 — `toDepth`, `crossedMilestones` |
 | `lib/analytics/depth.test.ts` | 신규 테스트 |
 | `lib/analytics/reader.ts` | 클라이언트 — `visit_id`/`reader_id` 발급, beacon 전송 |
 | `lib/analytics/repository.ts` | `recordPageView`(RPC 호출), `getPageStats` |
@@ -263,6 +267,7 @@ group by page_id;
 | `components/public/ReadingProgressBar.tsx` | `update()`에서 훅 콜백 호출 (수정 ~5줄) |
 | `app/admin/analytics/page.tsx` | 신규 화면 |
 | `components/analytics/StatsTable.tsx` | 신규 표 |
+| `lib/format.ts` | `formatDuration` 추가 |
 | `components/admin/Sidebar.tsx` | `NAV_ITEMS`에 "열람 분석" 추가 |
 
 ## 에러 처리

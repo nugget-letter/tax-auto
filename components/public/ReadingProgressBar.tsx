@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useScrollTracking } from "./useScrollTracking";
 
-export default function ReadingProgressBar() {
+export default function ReadingProgressBar({ slug }: { slug: string }) {
   const barRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const [visible, setVisible] = useState(false);
+  // 스크롤 진행률은 여기서만 계산한다. 트래킹은 리스너를 새로 걸지 않고
+  // 아래 update()에서 이 콜백으로 같은 값을 넘겨받는다.
+  const report = useScrollTracking(slug);
 
   useEffect(() => {
     let ticking = false;
@@ -20,6 +24,9 @@ export default function ReadingProgressBar() {
 
       if (!isVisible) {
         setVisible(false);
+        // 화면에 다 들어오는 페이지는 스크롤이 없어 진행률이 영원히 0이다.
+        // 그대로 두면 짧은 페이지가 전부 "0% 이탈"로 집계되므로 완독으로 본다.
+        report(1);
         return;
       }
 
@@ -30,6 +37,7 @@ export default function ReadingProgressBar() {
       const scrollable = doc.scrollHeight - window.innerHeight;
       const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
       progressRef.current = progress;
+      report(progress);
       if (barRef.current) {
         barRef.current.style.transform = `scaleX(${progress})`;
       }
@@ -58,7 +66,7 @@ export default function ReadingProgressBar() {
       window.removeEventListener("resize", onScrollOrResize);
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [report]);
 
   // Re-apply the last computed progress once the bar mounts, since the
   // update() call that flips `visible` to true runs before barRef is
