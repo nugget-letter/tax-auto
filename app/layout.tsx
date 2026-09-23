@@ -8,6 +8,7 @@ import {
   IBM_Plex_Sans_KR,
   IBM_Plex_Mono,
 } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "@seed-design/css/all.layered.css";
 
@@ -44,6 +45,15 @@ const gothicA1 = Gothic_A1({
   variable: "--font-gothic-a1",
 });
 
+// Pretendard는 Google Fonts에 없어 파일을 직접 둔다(v1.3.9 가변 폰트, OFL).
+// 소제목에서 고른 경우에만 쓰이므로 모든 페이지에서 미리 받지 않는다.
+const pretendard = localFont({
+  src: "./fonts/PretendardVariable.woff2",
+  weight: "45 920",
+  variable: "--font-pretendard",
+  preload: false,
+});
+
 // 어드민 전용 글꼴. 세일즈 랜딩(tax-brending-message)과 같은 체계를 쓴다.
 // body가 아니라 어드민 껍데기에만 거는 이유는 globals.css의 --font-sans를
 // 공개 랜딩페이지가 함께 쓰기 때문이다.
@@ -65,7 +75,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} ${plexKr.variable} ${plexMono.variable}`}>
+    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${gothicA1.variable} ${pretendard.variable} ${plexKr.variable} ${plexMono.variable}`}>
       <body className="font-sans antialiased">
         {children}
       </body>

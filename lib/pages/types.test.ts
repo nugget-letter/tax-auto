@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ctaBlockSchema, normalizeSendTags, pageSendSchema } from "./types";
+import { ctaBlockSchema, normalizeSendTags, pageSendSchema, textBlockSchema } from "./types";
 
 describe("normalizeSendTags", () => {
   it("앞뒤 공백을 제거한다", () => {
@@ -61,5 +61,27 @@ describe("ctaBlockSchema", () => {
     expect(ctaBlockSchema.safeParse({ ...base, height: "xl" }).success).toBe(false);
     expect(ctaBlockSchema.safeParse({ ...base, width: "half" }).success).toBe(false);
     expect(ctaBlockSchema.safeParse({ ...base, fontSize: "xxl" }).success).toBe(false);
+  });
+});
+
+describe("textBlockSchema 소제목 스타일", () => {
+  it("스타일 필드가 없는 기존 블록도 통과한다", () => {
+    expect(textBlockSchema.safeParse({ type: "text", bodyHtml: "<p>a</p>" }).success).toBe(true);
+  });
+  it("글꼴·크기·색상을 받는다", () => {
+    const block = {
+      type: "text",
+      heading: "소제목",
+      headingFont: "nanum-myeongjo",
+      headingSize: "xl",
+      headingColor: "#ff0000",
+      bodyHtml: "",
+    };
+    expect(textBlockSchema.safeParse(block).success).toBe(true);
+  });
+  it("목록에 없는 글꼴이나 잘못된 색상은 거부한다", () => {
+    const base = { type: "text", bodyHtml: "" };
+    expect(textBlockSchema.safeParse({ ...base, headingFont: "comic-sans" }).success).toBe(false);
+    expect(textBlockSchema.safeParse({ ...base, headingColor: "red" }).success).toBe(false);
   });
 });

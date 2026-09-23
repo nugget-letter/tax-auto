@@ -87,7 +87,7 @@ export default async function PublicPage({
             if (block.type === "text")
               return (
                 <ScrollReveal key={index} effect={block.scrollEffect}>
-                  <TextBlock block={block} hasBorderAfter={hasBorderAfter} />
+                  <TextBlock block={block} />
                 </ScrollReveal>
               );
             if (block.type === "divider")
