@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { ctaBlockSchema, normalizeSendTags, pageSendSchema, textBlockSchema } from "./types";
+import {
+  bannerBlockSchema,
+  ctaBlockSchema,
+  normalizeSendTags,
+  pageSendSchema,
+  textBlockSchema,
+} from "./types";
 
 describe("normalizeSendTags", () => {
   it("앞뒤 공백을 제거한다", () => {
@@ -83,5 +89,14 @@ describe("textBlockSchema 소제목 스타일", () => {
     const base = { type: "text", bodyHtml: "" };
     expect(textBlockSchema.safeParse({ ...base, headingFont: "comic-sans" }).success).toBe(false);
     expect(textBlockSchema.safeParse({ ...base, headingColor: "red" }).success).toBe(false);
+  });
+});
+
+describe("bannerBlockSchema 제목 글꼴", () => {
+  it("글꼴이 없어도, 목록의 글꼴이어도 통과하고 목록 밖은 거부한다", () => {
+    const base = { type: "banner", imageUrl: "https://x/a.png" };
+    expect(bannerBlockSchema.safeParse(base).success).toBe(true);
+    expect(bannerBlockSchema.safeParse({ ...base, titleFont: "pretendard" }).success).toBe(true);
+    expect(bannerBlockSchema.safeParse({ ...base, titleFont: "comic-sans" }).success).toBe(false);
   });
 });

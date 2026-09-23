@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { BannerBlock } from "@/lib/pages/types";
+import type { BannerBlock, HeadingFont } from "@/lib/pages/types";
 import ScrollEffectSelect from "./ScrollEffectSelect";
+import { HEADING_FONT_LABELS } from "./TextBlockEditor";
 
 type Props = {
   block: BannerBlock;
@@ -73,6 +74,20 @@ export default function BannerBlockEditor({ block, onChange }: Props) {
         onChange={(e) => onChange({ ...block, title: e.target.value })}
         className="glass-field focus-flame w-full px-3 py-2 text-sm"
       />
+      <div className="flex items-center gap-2">
+        <label className="text-xs font-medium text-gray-500">제목 글꼴</label>
+        <select
+          value={block.titleFont ?? "noto-serif-kr"}
+          onChange={(e) => onChange({ ...block, titleFont: e.target.value as HeadingFont })}
+          className="rounded border border-gray-300 px-2 py-1 text-sm"
+        >
+          {Object.entries(HEADING_FONT_LABELS).map(([id, label]) => (
+            <option key={id} value={id}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
       <input
         type="text"
         placeholder="부제 (선택)"
