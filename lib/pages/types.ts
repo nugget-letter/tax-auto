@@ -35,9 +35,27 @@ export const bannerBlockSchema = z.object({
   scrollEffect: scrollEffectSchema.optional(),
 });
 
+// 소제목 글꼴은 app/layout.tsx가 로드하는 --font-<키> 변수 이름과 같다.
+// 기존에 저장된 블록에는 없는 필드라 모두 optional — 없으면 예전 모양(노토세리프, 보통, 진회색)으로 읽는다.
+export const headingFontSchema = z.enum([
+  "noto-serif-kr",
+  "noto-sans-kr",
+  "nanum-gothic",
+  "nanum-myeongjo",
+  "gothic-a1",
+  "pretendard",
+]);
+export type HeadingFont = z.infer<typeof headingFontSchema>;
+
+export const headingSizeSchema = z.enum(["sm", "md", "lg", "xl"]);
+export type HeadingSize = z.infer<typeof headingSizeSchema>;
+
 export const textBlockSchema = z.object({
   type: z.literal("text"),
   heading: z.string().optional(),
+  headingFont: headingFontSchema.optional(),
+  headingSize: headingSizeSchema.optional(),
+  headingColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "색상은 #RRGGBB 형식이어야 해요").optional(),
   bodyHtml: z.string(),
   scrollEffect: scrollEffectSchema.optional(),
 });

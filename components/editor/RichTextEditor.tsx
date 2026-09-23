@@ -20,6 +20,7 @@ const FONT_FAMILIES = [
   { label: "나눔고딕", value: "var(--font-nanum-gothic)" },
   { label: "나눔명조", value: "var(--font-nanum-myeongjo)" },
   { label: "고딕 A1", value: "var(--font-gothic-a1)" },
+  { label: "프리텐다드", value: "var(--font-pretendard)" },
 ];
 
 const LETTER_SPACINGS = [
