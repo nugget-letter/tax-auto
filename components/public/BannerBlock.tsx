@@ -14,7 +14,12 @@ export default function BannerBlock({
       {(block.title || block.subtitle) && (
         <figcaption className="mx-auto max-w-xl px-6 py-6 text-center">
           {block.title && (
-            <p className="font-serif text-xl font-bold text-gray-900">{block.title}</p>
+            <p
+              className="text-xl font-bold text-gray-900"
+              style={{ fontFamily: `var(--font-${block.titleFont ?? "noto-serif-kr"})` }}
+            >
+              {block.title}
+            </p>
           )}
           {block.subtitle && <p className="mt-1 text-sm text-gray-500">{block.subtitle}</p>}
         </figcaption>

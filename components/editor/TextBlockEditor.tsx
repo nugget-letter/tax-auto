@@ -9,7 +9,7 @@ type Props = {
   onChange: (block: TextBlock) => void;
 };
 
-const HEADING_FONT_LABELS: Record<HeadingFont, string> = {
+export const HEADING_FONT_LABELS: Record<HeadingFont, string> = {
   "noto-serif-kr": "노토세리프 KR (기본)",
   "noto-sans-kr": "노토산스 KR",
   "nanum-gothic": "나눔고딕",
