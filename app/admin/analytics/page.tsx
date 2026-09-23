@@ -4,19 +4,17 @@ import { getPageStats } from "@/lib/analytics/repository";
 import { EMPTY_STATS } from "@/lib/analytics/types";
 import GlassPanel from "@/components/ui/GlassPanel";
 import StatsTable, { type StatsRow } from "@/components/analytics/StatsTable";
-import type { PageRecord } from "@/lib/pages/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
   const [pages, stats] = await Promise.all([listPages(), getPageStats().catch(() => null)]);
 
-  // 발행된 적 있는 페이지만 본다. 보관 처리했어도 "그때 얼마나 읽혔나"는 남겨둔다.
-  // 정렬은 발행된 URL 화면과 같게 — 실제로 보낸 날이 있으면 그 날 기준이다.
-  const sortKey = (page: PageRecord) => page.sentOn ?? page.publishedAt!;
+  // 실제로 고객에게 보낸 페이지만 본다. 발행만 해두고 아직 안 보낸 페이지는 열람이
+  // 없는 게 당연해서, 같이 두면 0%가 섞여 발송분끼리의 비교를 흐린다.
   const rows: StatsRow[] = pages
-    .filter((page) => page.publishedAt !== null)
-    .sort((a, b) => sortKey(b).localeCompare(sortKey(a)))
+    .filter((page) => page.sentOn !== null)
+    .sort((a, b) => b.sentOn!.localeCompare(a.sentOn!))
     .map((page) => ({
       page,
       // 기록이 없는 페이지는 숨기지 않고 0으로 보여준다 — "안 읽혔다"도 정보다.
@@ -101,7 +99,7 @@ export default async function AnalyticsPage() {
         </GlassPanel>
       ) : rows.length === 0 ? (
         <Text as="p" textStyle="t4Regular" color="fg.neutralSubtle" className="mt-6">
-          아직 발행된 페이지가 없어요.
+          아직 전송한 페이지가 없어요. 발행된 URL 화면에서 전송일을 기록하면 여기에 나타나요.
         </Text>
       ) : (
         <GlassPanel className="mt-6">
