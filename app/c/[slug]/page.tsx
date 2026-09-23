@@ -54,7 +54,7 @@ export default async function PublicPage({
   return (
     <main className="min-h-screen bg-white pb-10">
       {page.status !== "published" && <PreviewBanner />}
-      {page.status === "published" && <ReadingProgressBar />}
+      {page.status === "published" && <ReadingProgressBar slug={page.slug} />}
       <div className="overflow-x-clip">
         {(() => {
           const AUTO_BORDER_TYPES = ["banner", "text", "cta", "form"];

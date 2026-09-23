@@ -67,3 +67,58 @@ alter table pages add column if not exists sent_on date;
 alter table pages add column if not exists send_tags text[] not null default '{}';
 
 create index if not exists pages_sent_on_idx on pages (sent_on desc);
+
+-- 2026-09-23 마이그레이션: 스크롤 도달률 트래킹.
+-- 발행된 페이지(/c/[slug])의 열람 1회가 1행이다. 같은 링크가 카카오 채널로 다수에게
+-- 일괄 발송되므로 수신자를 알 수 없고, 페이지 단위 집계만 만든다.
+--   visit_id  : 페이지 로드마다 새로 발급 → 열람 "횟수"
+--   reader_id : localStorage에 남는 기기 식별자 → 열람 "인원" (없을 수 있다)
+-- 구형 WebView에 crypto.randomUUID가 없어 클라이언트가 uuid를 보장하지 못하므로
+-- 두 칼럼 모두 text다.
+create table if not exists page_views (
+  visit_id   text primary key,
+  page_id    uuid not null references pages(id) on delete cascade,
+  reader_id  text,
+  max_depth  smallint not null default 0 check (max_depth between 0 and 100),
+  dwell_ms   integer not null default 0 check (dwell_ms >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table page_views enable row level security;
+
+create index if not exists page_views_page_id_idx on page_views (page_id, created_at desc);
+
+-- 전송이 순서대로 도착한다는 보장이 없다(50% 전송이 100%보다 늦게 도착할 수 있다).
+-- 읽고-쓰기로 처리하면 경합이 생기므로 greatest()로 원자적으로 갱신해, 한 번 올라간
+-- 도달률이 뒤늦게 도착한 낮은 값에 덮여 내려가지 않게 한다.
+create or replace function record_page_view(
+  p_page_id   uuid,
+  p_visit_id  text,
+  p_reader_id text,
+  p_depth     smallint,
+  p_dwell_ms  integer
+) returns void as $$
+  insert into page_views (visit_id, page_id, reader_id, max_depth, dwell_ms)
+  values (p_visit_id, p_page_id, p_reader_id, p_depth, p_dwell_ms)
+  on conflict (visit_id) do update set
+    max_depth  = greatest(page_views.max_depth, excluded.max_depth),
+    dwell_ms   = greatest(page_views.dwell_ms, excluded.dwell_ms),
+    updated_at = now();
+$$ language sql;
+
+-- 어드민 "열람 분석" 화면이 페이지 수만큼 쿼리를 날리지 않도록 집계를 뷰로 고정한다.
+-- coalesce(reader_id, visit_id)는 스토리지가 막혀 reader_id가 없는 방문을 버리지 않고
+-- 1명으로 계산하기 위한 것이다 — 버리면 그 기기들이 인원에서 통째로 사라진다.
+create or replace view page_view_stats as
+select
+  page_id,
+  count(*)                                            as views,
+  count(distinct coalesce(reader_id, visit_id))       as readers,
+  count(*) filter (where max_depth >= 25)             as reached_25,
+  count(*) filter (where max_depth >= 50)             as reached_50,
+  count(*) filter (where max_depth >= 75)             as reached_75,
+  count(*) filter (where max_depth >= 100)            as reached_100,
+  coalesce(avg(dwell_ms), 0)::integer                 as avg_dwell_ms
+from page_views
+group by page_id;
